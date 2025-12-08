@@ -33,7 +33,8 @@ import kotlinx.coroutines.launch
 fun AdminClubsScreen(
     viewModel: MainViewModel,
     onMenuClick: () -> Unit,
-    onClubClick: (Long) -> Unit
+    onClubClick: (Long) -> Unit,
+    onEditClub: (Long) -> Unit
 ) {
     val allClubs by viewModel.allClubs.collectAsState()
     val scope = rememberCoroutineScope()
@@ -129,6 +130,7 @@ fun AdminClubsScreen(
                     club = club,
                     viewModel = viewModel,
                     onClick = { onClubClick(club.id) },
+                    onEdit = { onEditClub(club.id) },
                     onToggleVerification = {
                         scope.launch {
                             val newStatus = !club.isVerified
@@ -161,6 +163,7 @@ private fun AdminClubCard(
     club: Club,
     viewModel: MainViewModel,
     onClick: () -> Unit,
+    onEdit: () -> Unit,
     onToggleVerification: () -> Unit,
     onDelete: () -> Unit
 ) {
@@ -339,11 +342,26 @@ private fun AdminClubCard(
 
                 Divider(modifier = Modifier.padding(vertical = 12.dp))
 
-                // Кнопка удаления
+                // Кнопки редактирования и удаления
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
                 ) {
+                    TextButton(
+                        onClick = onEdit,
+                        colors = ButtonDefaults.textButtonColors(contentColor = PrimaryColor)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp)
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text("Изменить")
+                    }
+                    
+                    Spacer(modifier = Modifier.width(8.dp))
+                    
                     TextButton(
                         onClick = { showDeleteDialog = true },
                         colors = ButtonDefaults.textButtonColors(contentColor = Color.Red)

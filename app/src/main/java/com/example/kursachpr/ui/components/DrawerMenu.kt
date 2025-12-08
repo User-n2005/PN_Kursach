@@ -62,7 +62,7 @@ fun DrawerMenu(
         modifier = modifier
             .fillMaxHeight()
             .width(280.dp)
-            .background(PrimaryColor)
+            .background(PrimaryColor.copy(alpha = 0.93f))
             .padding(top = 48.dp)
     ) {
         menuItems.forEach { item ->

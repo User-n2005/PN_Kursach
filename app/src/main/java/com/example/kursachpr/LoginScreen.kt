@@ -32,6 +32,20 @@ import com.example.kursachpr.ui.theme.*
 import com.example.kursachpr.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
 
+// Данные для автозаполнения логинов
+data class LoginSuggestion(
+    val login: String,
+    val label: String
+)
+
+private val loginSuggestions = listOf(
+    LoginSuggestion("admin", "Администратор"),
+    LoginSuggestion("89001234567", "Организатор"),
+    LoginSuggestion("89007654321", "Родитель"),
+    LoginSuggestion("89009876543", "Ребёнок")
+)
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
     navController: NavController,
@@ -44,6 +58,19 @@ fun LoginScreen(
     var password by remember { mutableStateOf("") }
     var showPassword by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(false) }
+    var expanded by remember { mutableStateOf(false) }
+    
+    // Фильтруем подсказки по введённому тексту
+    val filteredSuggestions = remember(phone) {
+        if (phone.isEmpty()) {
+            loginSuggestions
+        } else {
+            loginSuggestions.filter { 
+                it.login.contains(phone, ignoreCase = true) ||
+                it.label.contains(phone, ignoreCase = true)
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -89,26 +116,64 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(48.dp))
 
-        // Поле телефона/логина
-        OutlinedTextField(
-            value = phone,
-            onValueChange = { phone = it },
-            label = { Text("Телефон или логин") },
-            placeholder = { Text("Введите телефон или логин") },
-            modifier = Modifier.fillMaxWidth(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = AccentColor,
-                unfocusedBorderColor = SecondaryColor,
-                focusedLabelColor = AccentColor,
-                unfocusedLabelColor = Color.Gray,
-                cursorColor = AccentColor,
-                focusedContainerColor = Color.White,
-                unfocusedContainerColor = Color.White
-            ),
-            shape = RoundedCornerShape(12.dp),
-            singleLine = true
-        )
+        // Поле телефона/логина с автозаполнением
+        ExposedDropdownMenuBox(
+            expanded = expanded && filteredSuggestions.isNotEmpty(),
+            onExpandedChange = { expanded = it }
+        ) {
+            OutlinedTextField(
+                value = phone,
+                onValueChange = { 
+                    phone = it
+                    expanded = true
+                },
+                label = { Text("Телефон или логин") },
+                placeholder = { Text("Введите телефон или логин") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .menuAnchor(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = AccentColor,
+                    unfocusedBorderColor = SecondaryColor,
+                    focusedLabelColor = AccentColor,
+                    unfocusedLabelColor = Color.Gray,
+                    cursorColor = AccentColor,
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White
+                ),
+                shape = RoundedCornerShape(12.dp),
+                singleLine = true
+            )
+            
+            ExposedDropdownMenu(
+                expanded = expanded && filteredSuggestions.isNotEmpty(),
+                onDismissRequest = { expanded = false }
+            ) {
+                filteredSuggestions.forEach { suggestion ->
+                    DropdownMenuItem(
+                        text = {
+                            Column {
+                                Text(
+                                    text = suggestion.login,
+                                    fontWeight = FontWeight.Medium,
+                                    color = TextPrimary
+                                )
+                                Text(
+                                    text = suggestion.label,
+                                    fontSize = 12.sp,
+                                    color = Color.Gray
+                                )
+                            }
+                        },
+                        onClick = {
+                            phone = suggestion.login
+                            expanded = false
+                        }
+                    )
+                }
+            }
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 

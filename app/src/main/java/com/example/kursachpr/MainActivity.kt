@@ -262,6 +262,9 @@ class MainActivity : ComponentActivity() {
                                     },
                                     onClubClick = { clubId ->
                                         navController.navigate("${Screen.ClubDetail}/$clubId")
+                                    },
+                                    onEditClub = { clubId ->
+                                        navController.navigate("${Screen.EditClub}/$clubId")
                                     }
                                 )
                             }
