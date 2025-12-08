@@ -29,6 +29,12 @@ interface ReviewDao {
 
     @Query("UPDATE reviews SET reply = :reply WHERE id = :id")
     suspend fun addReply(id: Long, reply: String)
+
+    @Query("SELECT AVG(CAST(rating AS FLOAT)) FROM reviews WHERE clubId = :clubId AND isApproved = 1")
+    suspend fun getAverageRating(clubId: Long): Float?
+
+    @Query("SELECT COUNT(*) FROM reviews WHERE clubId = :clubId AND isApproved = 1")
+    suspend fun getReviewCount(clubId: Long): Int
 }
 
 

@@ -90,7 +90,29 @@ abstract class AppDatabase : RoomDatabase() {
             )
             userDao.insert(organizer)
 
-            // Создаём тестовые кружки
+            // Создаём тестового родителя
+            val parent = User(
+                id = 3,
+                userType = UserType.PARENT,
+                fullName = "Петрова Мария Сергеевна",
+                phone = "89007654321",
+                password = "123456",
+                city = "Муром"
+            )
+            userDao.insert(parent)
+
+            // Создаём тестового ребёнка
+            val child = User(
+                id = 4,
+                userType = UserType.CHILD,
+                fullName = "Петров Алексей",
+                phone = "89009876543",
+                password = "123456",
+                city = "Муром"
+            )
+            userDao.insert(child)
+
+            // Создаём тестовые кружки (рейтинг 0 - будет рассчитан из отзывов)
             val clubs = listOf(
                 Club(
                     id = 1,
@@ -106,8 +128,8 @@ abstract class AppDatabase : RoomDatabase() {
                     pricePerMonth = 2000,
                     schedule = "Пн, Ср, Пт 16:00-18:00",
                     isVerified = true,
-                    rating = 4.8f,
-                    reviewCount = 15
+                    rating = 0f,
+                    reviewCount = 0
                 ),
                 Club(
                     id = 2,
@@ -123,8 +145,8 @@ abstract class AppDatabase : RoomDatabase() {
                     pricePerMonth = 1500,
                     schedule = "Вт, Чт 15:00-17:00",
                     isVerified = true,
-                    rating = 4.5f,
-                    reviewCount = 8
+                    rating = 0f,
+                    reviewCount = 0
                 ),
                 Club(
                     id = 3,
@@ -140,8 +162,8 @@ abstract class AppDatabase : RoomDatabase() {
                     pricePerMonth = 3000,
                     schedule = "Сб 10:00-13:00",
                     isVerified = false,
-                    rating = 4.9f,
-                    reviewCount = 22
+                    rating = 0f,
+                    reviewCount = 0
                 ),
                 Club(
                     id = 4,
@@ -157,8 +179,8 @@ abstract class AppDatabase : RoomDatabase() {
                     pricePerMonth = 1000,
                     schedule = "Пн, Ср 17:00-19:00",
                     isVerified = true,
-                    rating = 4.7f,
-                    reviewCount = 12
+                    rating = 0f,
+                    reviewCount = 0
                 ),
                 Club(
                     id = 5,
@@ -174,12 +196,115 @@ abstract class AppDatabase : RoomDatabase() {
                     pricePerMonth = 2500,
                     schedule = "Вт, Чт, Сб 18:00-20:00",
                     isVerified = true,
-                    rating = 4.6f,
-                    reviewCount = 18
+                    rating = 0f,
+                    reviewCount = 0
                 )
             )
             
             clubs.forEach { clubDao.insert(it) }
+
+            // Добавляем тестовые отзывы
+            val reviewDao = database.reviewDao()
+            val reviews = listOf(
+                // Отзывы на "Лыжные гонки" (clubId = 1)
+                Review(
+                    clubId = 1,
+                    userId = 3, // Родитель
+                    rating = 5,
+                    text = "Отличная секция! Сын занимается уже второй год, очень доволен. Тренеры внимательные и профессиональные.",
+                    reply = "Спасибо за отзыв! Рады, что вашему сыну нравится!"
+                ),
+                Review(
+                    clubId = 1,
+                    userId = 4, // Ребёнок
+                    rating = 5,
+                    text = "Мне очень нравится! Тренировки интересные, уже участвовал в соревнованиях."
+                ),
+                Review(
+                    clubId = 1,
+                    userId = 3,
+                    rating = 4,
+                    text = "Хорошая организация, но хотелось бы больше занятий в неделю."
+                ),
+                
+                // Отзывы на "Рисование" (clubId = 2)
+                Review(
+                    clubId = 2,
+                    userId = 3,
+                    rating = 5,
+                    text = "Дочка в восторге! Преподаватель умеет заинтересовать детей. Уже нарисовала целую выставку домой.",
+                    reply = "Благодарим за тёплые слова! Ждём вас на новых занятиях!"
+                ),
+                Review(
+                    clubId = 2,
+                    userId = 4,
+                    rating = 4,
+                    text = "Интересно учиться рисовать разными техниками."
+                ),
+                
+                // Отзывы на "Робототехника" (clubId = 3)
+                Review(
+                    clubId = 3,
+                    userId = 3,
+                    rating = 5,
+                    text = "Лучший кружок по робототехнике в городе! Ребёнок научился программировать и собирать роботов."
+                ),
+                Review(
+                    clubId = 3,
+                    userId = 4,
+                    rating = 5,
+                    text = "Супер! Мы даже участвовали в олимпиаде по робототехнике!"
+                ),
+                Review(
+                    clubId = 3,
+                    userId = 3,
+                    rating = 4,
+                    text = "Отличное оборудование, интересная программа. Немного дороговато, но оно того стоит."
+                ),
+                
+                // Отзывы на "Шахматы" (clubId = 4)
+                Review(
+                    clubId = 4,
+                    userId = 4,
+                    rating = 5,
+                    text = "Научился играть с нуля! Теперь обыгрываю папу 😄"
+                ),
+                Review(
+                    clubId = 4,
+                    userId = 3,
+                    rating = 4,
+                    text = "Хороший преподаватель, терпеливый. Сын стал более усидчивым."
+                ),
+                
+                // Отзывы на "Современные танцы" (clubId = 5)
+                Review(
+                    clubId = 5,
+                    userId = 4,
+                    rating = 5,
+                    text = "Обожаю эти танцы! Хореограф очень крутой, учит современным движениям."
+                ),
+                Review(
+                    clubId = 5,
+                    userId = 3,
+                    rating = 4,
+                    text = "Дочь ходит с удовольствием. Есть выступления на городских мероприятиях."
+                ),
+                Review(
+                    clubId = 5,
+                    userId = 4,
+                    rating = 5,
+                    text = "Лучший танцевальный кружок! Атмосфера дружная, много концертов."
+                )
+            )
+            
+            reviews.forEach { reviewDao.insert(it) }
+            
+            // Обновляем рейтинги кружков на основе отзывов
+            for (clubId in 1L..5L) {
+                val avgRating = reviewDao.getAverageRating(clubId) ?: 0f
+                val reviewCount = reviewDao.getReviewCount(clubId)
+                clubDao.updateRating(clubId, avgRating, reviewCount)
+            }
         }
     }
 }

@@ -49,9 +49,25 @@ class AppRepository(
     // === Reviews ===
     fun getReviewsByClub(clubId: Long): Flow<List<Review>> = reviewDao.getReviewsByClub(clubId)
     fun getAllReviews(): Flow<List<Review>> = reviewDao.getAllReviews()
-    suspend fun insertReview(review: Review): Long = reviewDao.insert(review)
-    suspend fun deleteReview(id: Long) = reviewDao.deleteById(id)
+    suspend fun insertReview(review: Review): Long {
+        val id = reviewDao.insert(review)
+        updateClubRating(review.clubId)
+        return id
+    }
+    suspend fun deleteReview(id: Long, clubId: Long) {
+        reviewDao.deleteById(id)
+        updateClubRating(clubId)
+    }
     suspend fun addReplyToReview(id: Long, reply: String) = reviewDao.addReply(id, reply)
+    
+    suspend fun getAverageRating(clubId: Long): Float = reviewDao.getAverageRating(clubId) ?: 0f
+    suspend fun getReviewCount(clubId: Long): Int = reviewDao.getReviewCount(clubId)
+    
+    suspend fun updateClubRating(clubId: Long) {
+        val avgRating = reviewDao.getAverageRating(clubId) ?: 0f
+        val reviewCount = reviewDao.getReviewCount(clubId)
+        clubDao.updateRating(clubId, avgRating, reviewCount)
+    }
 
     // === Applications ===
     fun getApplicationsByUser(userId: Long): Flow<List<Application>> = applicationDao.getApplicationsByUser(userId)

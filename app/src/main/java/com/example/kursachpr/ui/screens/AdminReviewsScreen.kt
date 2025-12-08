@@ -195,7 +195,7 @@ fun AdminReviewsScreen(
                         viewModel = viewModel,
                         onDelete = {
                             scope.launch {
-                                viewModel.deleteReview(review.id)
+                                viewModel.deleteReview(review.id, review.clubId)
                             }
                         }
                     )

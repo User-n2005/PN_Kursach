@@ -1,6 +1,8 @@
 package com.example.kursachpr.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -14,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -200,7 +203,8 @@ fun ClubDetailScreen(
                             review = review,
                             viewModel = viewModel,
                             isOrganizer = currentUser?.userType == UserType.ORGANIZER && 
-                                         currentUser?.id == club?.organizerId
+                                         currentUser?.id == club?.organizerId,
+                            isAdmin = currentUser?.userType == UserType.ADMIN
                         )
                     }
                 }
@@ -241,6 +245,8 @@ fun ClubDetailScreen(
 
 @Composable
 private fun ClubHeader(club: Club, organizerName: String) {
+    val context = LocalContext.current
+    
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
@@ -264,7 +270,15 @@ private fun ClubHeader(club: Club, organizerName: String) {
                         imageVector = Icons.Default.Verified,
                         contentDescription = "Верифицирован",
                         tint = Color(0xFF4FC3F7),
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier
+                            .size(24.dp)
+                            .clickable {
+                                Toast.makeText(
+                                    context,
+                                    "Кружок прошёл проверку ✓",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                     )
                 }
             }
@@ -434,10 +448,12 @@ private fun ScheduleCard(schedule: String) {
 private fun ReviewCard(
     review: Review,
     viewModel: MainViewModel,
-    isOrganizer: Boolean
+    isOrganizer: Boolean,
+    isAdmin: Boolean = false
 ) {
     var authorName by remember { mutableStateOf("") }
     var showReplyDialog by remember { mutableStateOf(false) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(review.userId) {
@@ -463,10 +479,11 @@ private fun ReviewCard(
                     text = authorName,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium,
-                    color = TextPrimary
+                    color = TextPrimary,
+                    modifier = Modifier.weight(1f)
                 )
 
-                Row {
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     repeat(5) { index ->
                         Icon(
                             imageVector = if (index < review.rating) Icons.Default.Star else Icons.Default.StarBorder,
@@ -474,6 +491,22 @@ private fun ReviewCard(
                             tint = Color(0xFFFFD700),
                             modifier = Modifier.size(16.dp)
                         )
+                    }
+                    
+                    // Кнопка удаления для админа
+                    if (isAdmin) {
+                        Spacer(modifier = Modifier.width(8.dp))
+                        IconButton(
+                            onClick = { showDeleteDialog = true },
+                            modifier = Modifier.size(24.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Delete,
+                                contentDescription = "Удалить",
+                                tint = Color.Red.copy(alpha = 0.7f),
+                                modifier = Modifier.size(18.dp)
+                            )
+                        }
                     }
                 }
             }
@@ -520,7 +553,7 @@ private fun ReviewCard(
                 }
             }
 
-            // Кнопка ответа для организатора
+            // Кнопка ответа для организатора (только если нет ответа)
             if (isOrganizer && review.reply.isEmpty()) {
                 Spacer(modifier = Modifier.height(8.dp))
                 TextButton(
@@ -547,6 +580,33 @@ private fun ReviewCard(
                 scope.launch {
                     viewModel.replyToReview(review.id, reply)
                     showReplyDialog = false
+                }
+            }
+        )
+    }
+
+    // Диалог удаления для админа
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = { Text("Удалить отзыв?") },
+            text = { Text("Вы уверены, что хотите удалить этот отзыв?") },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        scope.launch {
+                            viewModel.deleteReview(review.id, review.clubId)
+                            showDeleteDialog = false
+                        }
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                ) {
+                    Text("Удалить")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteDialog = false }) {
+                    Text("Отмена")
                 }
             }
         )

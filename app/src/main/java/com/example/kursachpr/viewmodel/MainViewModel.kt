@@ -166,7 +166,7 @@ class MainViewModel(application: AndroidApplication) : AndroidViewModel(applicat
         )
     }
 
-    suspend fun deleteReview(id: Long) = repository.deleteReview(id)
+    suspend fun deleteReview(id: Long, clubId: Long) = repository.deleteReview(id, clubId)
 
     suspend fun replyToReview(id: Long, reply: String) = repository.addReplyToReview(id, reply)
 

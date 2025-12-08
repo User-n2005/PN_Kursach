@@ -89,14 +89,14 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(48.dp))
 
-        // Поле телефона
+        // Поле телефона/логина
         OutlinedTextField(
             value = phone,
             onValueChange = { phone = it },
             label = { Text("Телефон или логин") },
-            placeholder = { Text("+7 (___) ___-__-__") },
+            placeholder = { Text("Введите телефон или логин") },
             modifier = Modifier.fillMaxWidth(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = AccentColor,
                 unfocusedBorderColor = SecondaryColor,

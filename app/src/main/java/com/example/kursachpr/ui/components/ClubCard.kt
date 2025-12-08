@@ -1,5 +1,6 @@
 package com.example.kursachpr.ui.components
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -14,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -30,6 +32,8 @@ fun ClubCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+    
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -64,7 +68,15 @@ fun ClubCard(
                                 imageVector = Icons.Default.Verified,
                                 contentDescription = "Верифицирован",
                                 tint = Color.White,
-                                modifier = Modifier.size(18.dp)
+                                modifier = Modifier
+                                    .size(18.dp)
+                                    .clickable {
+                                        Toast.makeText(
+                                            context,
+                                            "Кружок прошёл проверку ✓",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
                             )
                         }
                     }
