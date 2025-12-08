@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 // Типы пользователей
 enum class UserType {
-    PARENT,     // Родитель
+    USER,       // Пользователь (взрослый)
     CHILD,      // Ребёнок
     ORGANIZER,  // Организатор кружка
     ADMIN       // Администратор

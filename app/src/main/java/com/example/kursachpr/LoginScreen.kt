@@ -1,6 +1,6 @@
 package com.example.kursachpr
 
-import android.widget.Toast
+import com.example.kursachpr.ui.components.FoxToast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -41,7 +41,7 @@ data class LoginSuggestion(
 private val loginSuggestions = listOf(
     LoginSuggestion("admin", "Администратор"),
     LoginSuggestion("89001234567", "Организатор"),
-    LoginSuggestion("89007654321", "Родитель"),
+    LoginSuggestion("89007654321", "Пользователь"),
     LoginSuggestion("89009876543", "Ребёнок")
 )
 
@@ -216,7 +216,7 @@ fun LoginScreen(
         Button(
             onClick = {
                 if (phone.isBlank() || password.isBlank()) {
-                    Toast.makeText(context, "Заполните все поля", Toast.LENGTH_SHORT).show()
+                    FoxToast.show(context, "Заполните все поля")
                     return@Button
                 }
                 
@@ -226,12 +226,12 @@ fun LoginScreen(
                     isLoading = false
                     
                     if (user != null) {
-                        Toast.makeText(context, "Добро пожаловать, ${user.fullName}!", Toast.LENGTH_SHORT).show()
+                        FoxToast.show(context, "Добро пожаловать, ${user.fullName}!")
                         navController.navigate("home") {
                             popUpTo("login") { inclusive = true }
                         }
                     } else {
-                        Toast.makeText(context, "Неверный логин или пароль", Toast.LENGTH_SHORT).show()
+                        FoxToast.show(context, "Неверный логин или пароль")
                     }
                 }
             },

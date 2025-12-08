@@ -336,7 +336,7 @@ private fun AdminUserCard(
 
 private fun getUserTypeLabel(userType: UserType): String {
     return when (userType) {
-        UserType.PARENT -> "Родитель"
+        UserType.USER -> "Пользователь"
         UserType.CHILD -> "Ребёнок"
         UserType.ORGANIZER -> "Организатор"
         UserType.ADMIN -> "Админ"
@@ -345,7 +345,7 @@ private fun getUserTypeLabel(userType: UserType): String {
 
 private fun getUserTypeColor(userType: UserType): Color {
     return when (userType) {
-        UserType.PARENT -> Color(0xFF2196F3)
+        UserType.USER -> Color(0xFF2196F3)
         UserType.CHILD -> Color(0xFF4CAF50)
         UserType.ORGANIZER -> Color(0xFFFF9800)
         UserType.ADMIN -> Color(0xFFF44336)

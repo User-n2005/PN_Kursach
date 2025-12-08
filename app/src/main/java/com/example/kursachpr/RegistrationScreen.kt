@@ -1,6 +1,6 @@
 package com.example.kursachpr
 
-import android.widget.Toast
+import com.example.kursachpr.ui.components.FoxToast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -37,7 +37,7 @@ import kotlinx.coroutines.launch
 
 // Роли пользователей для регистрации (без администратора)
 enum class RegistrationRole(val title: String, val userType: UserType) {
-    PARENT("Родитель", UserType.PARENT),
+    USER("Пользователь", UserType.USER),
     CHILD("Ребёнок", UserType.CHILD),
     ORGANIZER("Организатор кружка", UserType.ORGANIZER)
 }
@@ -55,7 +55,7 @@ fun RegistrationScreen(
     var phone by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var city by remember { mutableStateOf("") }
-    var selectedRole by remember { mutableStateOf(RegistrationRole.PARENT) }
+    var selectedRole by remember { mutableStateOf(RegistrationRole.USER) }
     var showPassword by remember { mutableStateOf(false) }
     var expanded by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(false) }
@@ -262,20 +262,20 @@ fun RegistrationScreen(
             onClick = {
                 when {
                     fullName.isBlank() -> {
-                        Toast.makeText(context, "Введите ФИО", Toast.LENGTH_SHORT).show()
+                        FoxToast.show(context, "Введите ФИО")
                     }
                     phone.isBlank() || phone.length < 10 -> {
-                        Toast.makeText(context, "Введите корректный номер телефона", Toast.LENGTH_SHORT).show()
+                        FoxToast.show(context, "Введите корректный номер телефона")
                     }
                     password.length < 6 -> {
-                        Toast.makeText(context, "Пароль должен быть не менее 6 символов", Toast.LENGTH_SHORT).show()
+                        FoxToast.show(context, "Пароль должен быть не менее 6 символов")
                     }
                     else -> {
                         isLoading = true
                         scope.launch {
                             // Проверяем, не занят ли телефон
                             if (viewModel.isPhoneExists(phone)) {
-                                Toast.makeText(context, "Этот номер уже зарегистрирован", Toast.LENGTH_SHORT).show()
+                                FoxToast.show(context, "Этот номер уже зарегистрирован")
                                 isLoading = false
                                 return@launch
                             }
@@ -291,7 +291,7 @@ fun RegistrationScreen(
                             viewModel.register(user)
                             isLoading = false
                             
-                            Toast.makeText(context, "Регистрация успешна!", Toast.LENGTH_SHORT).show()
+                            FoxToast.show(context, "Регистрация успешна!")
                             navController.navigate("login") {
                                 popUpTo("registration") { inclusive = true }
                             }

@@ -1,6 +1,6 @@
 package com.example.kursachpr.ui.screens
 
-import android.widget.Toast
+import com.example.kursachpr.ui.components.FoxToast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -68,7 +68,7 @@ fun ClubDetailScreen(
                     }
                 },
                 actions = {
-                    if (currentUser?.userType in listOf(UserType.PARENT, UserType.CHILD)) {
+                    if (currentUser?.userType in listOf(UserType.USER, UserType.CHILD)) {
                         IconButton(onClick = {
                             scope.launch {
                                 viewModel.toggleFavorite(clubId)
@@ -134,9 +134,42 @@ fun ClubDetailScreen(
                     ScheduleCard(schedule = club!!.schedule)
                 }
 
-                // Кнопки действий для родителя/ребёнка
-                if (currentUser?.userType in listOf(UserType.PARENT, UserType.CHILD)) {
+                // Кнопки действий для пользователя/ребёнка
+                if (currentUser?.userType in listOf(UserType.USER, UserType.CHILD)) {
+                    val isChildUser = currentUser?.userType == UserType.CHILD
+                    val isAdultOnlyClub = club?.ageFrom ?: 0 >= 16
+                    
                     item {
+                        val context = LocalContext.current
+                        // Предупреждение для детей о взрослых кружках
+                        if (isChildUser && isAdultOnlyClub) {
+                            Card(
+                                modifier = Modifier.fillMaxWidth(),
+                                shape = RoundedCornerShape(12.dp),
+                                colors = CardDefaults.cardColors(
+                                    containerColor = Color(0xFFFFF3E0)
+                                )
+                            ) {
+                                Row(
+                                    modifier = Modifier.padding(12.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Warning,
+                                        contentDescription = null,
+                                        tint = Color(0xFFE65100)
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(
+                                        text = "Этот кружок доступен только для лиц старше ${club?.ageFrom} лет",
+                                        fontSize = 14.sp,
+                                        color = Color(0xFFE65100)
+                                    )
+                                }
+                            }
+                            Spacer(modifier = Modifier.height(12.dp))
+                        }
+                        
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -153,10 +186,22 @@ fun ClubDetailScreen(
                             }
 
                             Button(
-                                onClick = { showApplicationDialog = true },
+                                onClick = { 
+                                    if (isChildUser && isAdultOnlyClub) {
+                                        FoxToast.show(
+                                            context,
+                                            "Запись доступна только для лиц старше ${club?.ageFrom} лет"
+                                        )
+                                    } else {
+                                        showApplicationDialog = true
+                                    }
+                                },
                                 modifier = Modifier.weight(1f),
                                 shape = RoundedCornerShape(12.dp),
-                                colors = ButtonDefaults.buttonColors(containerColor = AccentColor)
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = if (isChildUser && isAdultOnlyClub) 
+                                        Color.Gray else AccentColor
+                                )
                             ) {
                                 Icon(Icons.Default.Send, contentDescription = null)
                                 Spacer(modifier = Modifier.width(8.dp))
@@ -273,11 +318,7 @@ private fun ClubHeader(club: Club, organizerName: String) {
                         modifier = Modifier
                             .size(24.dp)
                             .clickable {
-                                Toast.makeText(
-                                    context,
-                                    "Кружок прошёл проверку ✓",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                FoxToast.show(context, "Кружок прошёл проверку ✓")
                             }
                     )
                 }

@@ -2,7 +2,7 @@
 
 package com.example.kursachpr.ui.screens
 
-import android.widget.Toast
+import com.example.kursachpr.ui.components.FoxToast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -140,7 +140,7 @@ fun AdminClubsScreen(
                             } else {
                                 "Верификация кружка \"${club.name}\" снята"
                             }
-                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                            FoxToast.show(context, message)
                         }
                     },
                     onDelete = {

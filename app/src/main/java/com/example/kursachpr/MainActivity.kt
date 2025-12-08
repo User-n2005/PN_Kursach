@@ -7,10 +7,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.kursachpr.data.database.AppDatabase
 import com.example.kursachpr.ui.components.DrawerMenu
 import com.example.kursachpr.ui.screens.*
 import com.example.kursachpr.ui.theme.KursachTheme
@@ -23,10 +25,17 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             KursachTheme {
+                val context = LocalContext.current
                 val viewModel: MainViewModel = viewModel()
                 val navController = rememberNavController()
                 val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
                 val scope = rememberCoroutineScope()
+                
+                // Инициализация базы данных при запуске
+                LaunchedEffect(Unit) {
+                    val database = AppDatabase.getDatabase(context)
+                    AppDatabase.ensurePopulated(database)
+                }
                 
                 val currentUser by viewModel.currentUser.collectAsState()
 

@@ -75,7 +75,7 @@ fun ProfileScreen(
 
                 // Быстрые действия в зависимости от типа пользователя
                 when (user.userType) {
-                    UserType.PARENT -> ParentQuickActions(
+                    UserType.USER -> ParentQuickActions(
                         onChildrenClick = onNavigateToChildren,
                         onFavoritesClick = onNavigateToFavorites,
                         onApplicationsClick = onNavigateToApplications
@@ -533,7 +533,7 @@ private fun EditProfileDialog(
 
 private fun getUserTypeLabel(userType: UserType): String {
     return when (userType) {
-        UserType.PARENT -> "Родитель"
+        UserType.USER -> "Пользователь"
         UserType.CHILD -> "Ребёнок"
         UserType.ORGANIZER -> "Организатор"
         UserType.ADMIN -> "Администратор"

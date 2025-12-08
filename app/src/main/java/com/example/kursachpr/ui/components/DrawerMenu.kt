@@ -27,7 +27,7 @@ fun DrawerMenu(
     modifier: Modifier = Modifier
 ) {
     val menuItems = when (userType) {
-        UserType.PARENT -> listOf(
+        UserType.USER -> listOf(
             DrawerMenuItem("Главная", "home"),
             DrawerMenuItem("Личный кабинет", "profile"),
             DrawerMenuItem("Мои записи", "my_applications"),

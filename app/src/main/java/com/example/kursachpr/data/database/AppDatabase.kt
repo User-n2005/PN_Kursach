@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
         Application::class,
         Favorite::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -37,6 +37,9 @@ abstract class AppDatabase : RoomDatabase() {
     companion object {
         @Volatile
         private var INSTANCE: AppDatabase? = null
+        
+        @Volatile
+        private var isPopulated = false
 
         fun getDatabase(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
@@ -45,26 +48,28 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "club_aggregator_db"
                 )
-                    .addCallback(DatabaseCallback())
+                    .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance
                 instance
             }
         }
-    }
-
-    // Callback для добавления начальных данных
-    private class DatabaseCallback : RoomDatabase.Callback() {
-        override fun onCreate(db: SupportSQLiteDatabase) {
-            super.onCreate(db)
-            INSTANCE?.let { database ->
-                CoroutineScope(Dispatchers.IO).launch {
-                    populateDatabase(database)
-                }
+        
+        // Вызывается из Application или MainActivity для заполнения БД
+        suspend fun ensurePopulated(database: AppDatabase) {
+            if (isPopulated) return
+            synchronized(this) {
+                if (isPopulated) return
+                isPopulated = true
+            }
+            // Проверяем, есть ли пользователи
+            val userCount = database.userDao().getUserCount()
+            if (userCount == 0) {
+                populateDatabase(database)
             }
         }
-
-        suspend fun populateDatabase(database: AppDatabase) {
+        
+        private suspend fun populateDatabase(database: AppDatabase) {
             val userDao = database.userDao()
             val clubDao = database.clubDao()
 
@@ -90,16 +95,16 @@ abstract class AppDatabase : RoomDatabase() {
             )
             userDao.insert(organizer)
 
-            // Создаём тестового родителя
-            val parent = User(
+            // Создаём тестового пользователя
+            val user = User(
                 id = 3,
-                userType = UserType.PARENT,
+                userType = UserType.USER,
                 fullName = "Петрова Мария Сергеевна",
                 phone = "89007654321",
                 password = "123456",
                 city = "Муром"
             )
-            userDao.insert(parent)
+            userDao.insert(user)
 
             // Создаём тестового ребёнка
             val child = User(
@@ -198,6 +203,58 @@ abstract class AppDatabase : RoomDatabase() {
                     isVerified = true,
                     rating = 0f,
                     reviewCount = 0
+                ),
+                // Кружки для взрослых (18+)
+                Club(
+                    id = 6,
+                    organizerId = 2,
+                    name = "Вечер рисования",
+                    description = "Арт-вечеринки для взрослых. Рисуем картины в приятной атмосфере с бокалом вина. Все материалы включены.",
+                    category = ClubCategory.ART,
+                    city = "Муром",
+                    district = "Центральный",
+                    address = "ул. Московская, 45",
+                    ageFrom = 18,
+                    ageTo = 99,
+                    pricePerMonth = 0,
+                    schedule = "Сб 19:00-22:00",
+                    isVerified = true,
+                    rating = 0f,
+                    reviewCount = 0
+                ),
+                Club(
+                    id = 7,
+                    organizerId = 2,
+                    name = "Йога для взрослых",
+                    description = "Расслабляющая йога для снятия стресса. Утренние и вечерние группы. Опытные инструкторы.",
+                    category = ClubCategory.SPORT,
+                    city = "Муром",
+                    district = "Южный",
+                    address = "ул. Пушкина, 50",
+                    ageFrom = 16,
+                    ageTo = 99,
+                    pricePerMonth = 2000,
+                    schedule = "Пн, Ср, Пт 7:00-8:00, 20:00-21:00",
+                    isVerified = true,
+                    rating = 0f,
+                    reviewCount = 0
+                ),
+                Club(
+                    id = 8,
+                    organizerId = 2,
+                    name = "Кулинарные мастер-классы",
+                    description = "Учимся готовить блюда разных кухонь мира. Дегустация и рецепты с собой. Только для взрослых.",
+                    category = ClubCategory.OTHER,
+                    city = "Муром",
+                    district = "Центральный",
+                    address = "ул. Ленина, 78",
+                    ageFrom = 18,
+                    ageTo = 99,
+                    pricePerMonth = 3500,
+                    schedule = "Вс 12:00-15:00",
+                    isVerified = false,
+                    rating = 0f,
+                    reviewCount = 0
                 )
             )
             
@@ -294,13 +351,42 @@ abstract class AppDatabase : RoomDatabase() {
                     userId = 4,
                     rating = 5,
                     text = "Лучший танцевальный кружок! Атмосфера дружная, много концертов."
+                ),
+                
+                // Отзывы на "Вечер рисования" (clubId = 6) - только от взрослых
+                Review(
+                    clubId = 6,
+                    userId = 3,
+                    rating = 5,
+                    text = "Потрясающий вечер! Отличный способ расслабиться после рабочей недели. Атмосфера очень приятная.",
+                    reply = "Спасибо! Ждём вас снова!"
+                ),
+                Review(
+                    clubId = 6,
+                    userId = 3,
+                    rating = 5,
+                    text = "Была уже 3 раза, каждый раз новые впечатления. Рекомендую всем!"
+                ),
+                
+                // Отзывы на "Йога для взрослых" (clubId = 7)
+                Review(
+                    clubId = 7,
+                    userId = 3,
+                    rating = 4,
+                    text = "Хорошие занятия, помогают снять напряжение. Инструктор внимательный."
+                ),
+                Review(
+                    clubId = 7,
+                    userId = 3,
+                    rating = 5,
+                    text = "Утренняя йога - лучшее начало дня! Чувствую себя бодрее."
                 )
             )
             
             reviews.forEach { reviewDao.insert(it) }
             
             // Обновляем рейтинги кружков на основе отзывов
-            for (clubId in 1L..5L) {
+            for (clubId in 1L..8L) {
                 val avgRating = reviewDao.getAverageRating(clubId) ?: 0f
                 val reviewCount = reviewDao.getReviewCount(clubId)
                 clubDao.updateRating(clubId, avgRating, reviewCount)
