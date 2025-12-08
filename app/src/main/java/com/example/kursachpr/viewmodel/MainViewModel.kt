@@ -182,9 +182,30 @@ class MainViewModel(application: AndroidApplication) : AndroidViewModel(applicat
 
     suspend fun deleteChild(child: ChildProfile) = repository.deleteChild(child)
 
+    // === Профиль пользователя ===
+    fun updateUser(user: User) {
+        viewModelScope.launch {
+            repository.updateUser(user)
+            _currentUser.value = user
+        }
+    }
+
     // === Пользователи (для админа) ===
     fun getAllUsers(): Flow<List<User>> = repository.getAllUsers()
 
     suspend fun deleteUser(id: Long) = repository.deleteUser(id)
+
+    // === Получение данных для отображения ===
+    suspend fun getUserById(id: Long): User? = repository.getUserById(id)
+
+    fun getFavoriteClubs(): Flow<List<Club>> {
+        val userId = _currentUser.value?.id ?: return flowOf(emptyList())
+        return repository.getFavoriteClubs(userId)
+    }
+
+    fun getApplicationsForMyClubs(): Flow<List<ClubApplication>> {
+        val userId = _currentUser.value?.id ?: return flowOf(emptyList())
+        return repository.getApplicationsForOrganizer(userId)
+    }
 }
 

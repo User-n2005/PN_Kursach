@@ -44,10 +44,11 @@ fun DrawerMenu(
             DrawerMenuItem("Главная", "home"),
             DrawerMenuItem("Личный кабинет", "profile"),
             DrawerMenuItem("Мои кружки", "my_clubs"),
-            DrawerMenuItem("Заявки", "applications")
+            DrawerMenuItem("Заявки", "club_applications")
         )
         UserType.ADMIN -> listOf(
             DrawerMenuItem("Главная", "home"),
+            DrawerMenuItem("Личный кабинет", "profile"),
             DrawerMenuItem("Пользователи", "admin_users"),
             DrawerMenuItem("Кружки", "admin_clubs"),
             DrawerMenuItem("Отзывы", "admin_reviews")

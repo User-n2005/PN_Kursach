@@ -61,9 +61,14 @@ class AppRepository(
 
     // === Favorites ===
     fun getFavoritesByUser(userId: Long): Flow<List<Favorite>> = favoriteDao.getFavoritesByUser(userId)
+    fun getFavoriteClubs(userId: Long): Flow<List<Club>> = favoriteDao.getFavoriteClubs(userId)
     suspend fun isFavorite(userId: Long, clubId: Long): Boolean = favoriteDao.isFavorite(userId, clubId)
     suspend fun addFavorite(favorite: Favorite): Long = favoriteDao.insert(favorite)
     suspend fun removeFavorite(userId: Long, clubId: Long) = favoriteDao.delete(userId, clubId)
+
+    // === Applications for Organizer ===
+    fun getApplicationsForOrganizer(organizerId: Long): Flow<List<Application>> = 
+        applicationDao.getApplicationsForOrganizer(organizerId)
 }
 
 

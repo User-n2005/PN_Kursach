@@ -12,8 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.kursachpr.ui.components.DrawerMenu
-import com.example.kursachpr.ui.screens.HomeScreen
-import com.example.kursachpr.ui.screens.SearchScreen
+import com.example.kursachpr.ui.screens.*
 import com.example.kursachpr.ui.theme.KursachTheme
 import com.example.kursachpr.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
@@ -41,7 +40,7 @@ class MainActivity : ComponentActivity() {
                                 scope.launch {
                                     drawerState.close()
                                     navController.navigate(route) {
-                                        popUpTo("home") { inclusive = false }
+                                        popUpTo(Screen.Home) { inclusive = false }
                                     }
                                 }
                             },
@@ -49,7 +48,7 @@ class MainActivity : ComponentActivity() {
                                 scope.launch {
                                     drawerState.close()
                                     viewModel.logout()
-                                    navController.navigate("login") {
+                                    navController.navigate(Screen.Login) {
                                         popUpTo(0) { inclusive = true }
                                     }
                                 }
@@ -110,26 +109,171 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
 
-                            // Детальная страница кружка (пока заглушка)
+                            // Детальная страница кружка
                             composable("${Screen.ClubDetail}/{clubId}") { backStackEntry ->
-                                val clubId = backStackEntry.arguments?.getString("clubId")?.toLongOrNull()
-                                // TODO: ClubDetailScreen
-                                Text("Страница кружка $clubId")
+                                val clubId = backStackEntry.arguments?.getString("clubId")?.toLongOrNull() ?: 0L
+                                ClubDetailScreen(
+                                    viewModel = viewModel,
+                                    clubId = clubId,
+                                    onBack = { navController.popBackStack() }
+                                )
                             }
 
-                            // Личный кабинет (пока заглушка)
+                            // Личный кабинет
                             composable(Screen.Profile) {
-                                Text("Личный кабинет")
+                                ProfileScreen(
+                                    viewModel = viewModel,
+                                    onMenuClick = {
+                                        scope.launch { drawerState.open() }
+                                    },
+                                    onNavigateToChildren = {
+                                        navController.navigate(Screen.Children)
+                                    },
+                                    onNavigateToFavorites = {
+                                        navController.navigate(Screen.Favorites)
+                                    },
+                                    onNavigateToApplications = {
+                                        navController.navigate(Screen.MyApplications)
+                                    },
+                                    onNavigateToMyClubs = {
+                                        navController.navigate(Screen.MyClubs)
+                                    },
+                                    onNavigateToClubApplications = {
+                                        navController.navigate(Screen.ClubApplications)
+                                    },
+                                    onNavigateToAdminUsers = {
+                                        navController.navigate(Screen.AdminUsers)
+                                    },
+                                    onNavigateToAdminClubs = {
+                                        navController.navigate(Screen.AdminClubs)
+                                    },
+                                    onNavigateToAdminReviews = {
+                                        navController.navigate(Screen.AdminReviews)
+                                    }
+                                )
                             }
 
-                            // Избранное (пока заглушка)
+                            // Избранное
                             composable(Screen.Favorites) {
-                                Text("Избранное")
+                                FavoritesScreen(
+                                    viewModel = viewModel,
+                                    onMenuClick = {
+                                        scope.launch { drawerState.open() }
+                                    },
+                                    onClubClick = { clubId ->
+                                        navController.navigate("${Screen.ClubDetail}/$clubId")
+                                    }
+                                )
                             }
 
-                            // Мои записи (пока заглушка)
+                            // Мои заявки (для родителя/ребёнка)
                             composable(Screen.MyApplications) {
-                                Text("Мои записи")
+                                MyApplicationsScreen(
+                                    viewModel = viewModel,
+                                    onMenuClick = {
+                                        scope.launch { drawerState.open() }
+                                    },
+                                    onClubClick = { clubId ->
+                                        navController.navigate("${Screen.ClubDetail}/$clubId")
+                                    }
+                                )
+                            }
+
+                            // Дети (для родителя)
+                            composable(Screen.Children) {
+                                ChildrenScreen(
+                                    viewModel = viewModel,
+                                    onMenuClick = {
+                                        scope.launch { drawerState.open() }
+                                    }
+                                )
+                            }
+
+                            // Мои кружки (для организатора)
+                            composable(Screen.MyClubs) {
+                                MyClubsScreen(
+                                    viewModel = viewModel,
+                                    onMenuClick = {
+                                        scope.launch { drawerState.open() }
+                                    },
+                                    onCreateClub = {
+                                        navController.navigate(Screen.CreateClub)
+                                    },
+                                    onEditClub = { clubId ->
+                                        navController.navigate("${Screen.EditClub}/$clubId")
+                                    },
+                                    onClubClick = { clubId ->
+                                        navController.navigate("${Screen.ClubDetail}/$clubId")
+                                    }
+                                )
+                            }
+
+                            // Заявки на кружки (для организатора)
+                            composable(Screen.ClubApplications) {
+                                ClubApplicationsScreen(
+                                    viewModel = viewModel,
+                                    onMenuClick = {
+                                        scope.launch { drawerState.open() }
+                                    }
+                                )
+                            }
+
+                            // Создание кружка
+                            composable(Screen.CreateClub) {
+                                CreateEditClubScreen(
+                                    viewModel = viewModel,
+                                    clubId = null,
+                                    onBack = { navController.popBackStack() },
+                                    onSaved = {
+                                        navController.popBackStack()
+                                    }
+                                )
+                            }
+
+                            // Редактирование кружка
+                            composable("${Screen.EditClub}/{clubId}") { backStackEntry ->
+                                val clubId = backStackEntry.arguments?.getString("clubId")?.toLongOrNull()
+                                CreateEditClubScreen(
+                                    viewModel = viewModel,
+                                    clubId = clubId,
+                                    onBack = { navController.popBackStack() },
+                                    onSaved = {
+                                        navController.popBackStack()
+                                    }
+                                )
+                            }
+
+                            // Админ: Пользователи
+                            composable(Screen.AdminUsers) {
+                                AdminUsersScreen(
+                                    viewModel = viewModel,
+                                    onMenuClick = {
+                                        scope.launch { drawerState.open() }
+                                    }
+                                )
+                            }
+
+                            // Админ: Кружки
+                            composable(Screen.AdminClubs) {
+                                AdminClubsScreen(
+                                    viewModel = viewModel,
+                                    onMenuClick = {
+                                        scope.launch { drawerState.open() }
+                                    },
+                                    onClubClick = { clubId ->
+                                        navController.navigate("${Screen.ClubDetail}/$clubId")
+                                    }
+                                )
+                            }
+
+                            // Админ: Отзывы
+                            composable(Screen.AdminReviews) {
+                                AdminReviewsScreen(
+                                    viewModel = viewModel,
+                                    onMenuClick = {
+                                        scope.launch { drawerState.open() }
+                                    }
+                                )
                             }
                         }
                     }
@@ -151,7 +295,9 @@ object Screen {
     const val MyApplications = "my_applications"
     const val Children = "children"
     const val MyClubs = "my_clubs"
-    const val Applications = "applications"
+    const val ClubApplications = "club_applications"
+    const val CreateClub = "create_club"
+    const val EditClub = "edit_club"
     const val AdminUsers = "admin_users"
     const val AdminClubs = "admin_clubs"
     const val AdminReviews = "admin_reviews"

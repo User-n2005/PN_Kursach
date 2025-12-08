@@ -13,6 +13,9 @@ interface ApplicationDao {
     @Query("SELECT * FROM applications WHERE clubId = :clubId ORDER BY createdAt DESC")
     fun getApplicationsByClub(clubId: Long): Flow<List<Application>>
 
+    @Query("SELECT a.* FROM applications a INNER JOIN clubs c ON a.clubId = c.id WHERE c.organizerId = :organizerId ORDER BY a.createdAt DESC")
+    fun getApplicationsForOrganizer(organizerId: Long): Flow<List<Application>>
+
     @Query("SELECT * FROM applications WHERE id = :id")
     suspend fun getApplicationById(id: Long): Application?
 
