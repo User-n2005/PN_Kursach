@@ -42,7 +42,6 @@ fun AdminUsersScreen(
     var selectedFilter by remember { mutableStateOf<UserType?>(null) }
     var searchQuery by remember { mutableStateOf("") }
 
-    // Фильтрация пользователей
     val filteredUsers = remember(users, selectedFilter, searchQuery) {
         users.filter { user ->
             (selectedFilter == null || user.userType == selectedFilter) &&
@@ -62,7 +61,6 @@ fun AdminUsersScreen(
             onMenuClick = onMenuClick
         )
 
-        // Поиск
         OutlinedTextField(
             value = searchQuery,
             onValueChange = { searchQuery = it },
@@ -79,13 +77,11 @@ fun AdminUsersScreen(
             )
         )
 
-        // Фильтры по типу пользователя
         ScrollableFilterRow(
             selectedFilter = selectedFilter,
             onFilterSelected = { selectedFilter = it }
         )
 
-        // Статистика
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -188,7 +184,6 @@ private fun AdminUserCard(
                 .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Аватар
             Box(
                 modifier = Modifier
                     .size(50.dp)
@@ -206,7 +201,6 @@ private fun AdminUserCard(
 
             Spacer(modifier = Modifier.width(12.dp))
 
-            // Информация
             Column(
                 modifier = Modifier.weight(1f)
             ) {
@@ -288,7 +282,6 @@ private fun AdminUserCard(
                 }
             }
 
-            // Кнопка удаления
             if (!isCurrentUser) {
                 IconButton(
                     onClick = { showDeleteDialog = true }
@@ -303,7 +296,6 @@ private fun AdminUserCard(
         }
     }
 
-    // Диалог подтверждения удаления
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
@@ -356,4 +348,3 @@ private fun formatDate(timestamp: Long): String {
     val sdf = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
     return sdf.format(Date(timestamp))
 }
-

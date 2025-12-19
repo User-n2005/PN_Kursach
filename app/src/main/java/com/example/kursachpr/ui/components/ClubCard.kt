@@ -42,7 +42,6 @@ fun ClubCard(
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column {
-            // Заголовок карточки
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -88,13 +87,11 @@ fun ClubCard(
                 }
             }
 
-            // Содержимое карточки
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(12.dp)
             ) {
-                // Изображение-заглушка
                 Box(
                     modifier = Modifier
                         .size(80.dp)
@@ -104,7 +101,6 @@ fun ClubCard(
 
                 Spacer(modifier = Modifier.width(12.dp))
 
-                // Описание
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = club.description,
@@ -133,7 +129,6 @@ fun ClubCardSmall(
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column {
-            // Заголовок
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -151,7 +146,6 @@ fun ClubCardSmall(
                 )
             }
 
-            // Содержимое
             Row(
                 modifier = Modifier.padding(8.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -174,5 +168,3 @@ fun ClubCardSmall(
         }
     }
 }
-
-

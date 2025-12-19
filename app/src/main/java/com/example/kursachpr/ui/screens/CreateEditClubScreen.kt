@@ -37,7 +37,6 @@ fun CreateEditClubScreen(
     var isLoading by remember { mutableStateOf(clubId != null) }
     var existingClub by remember { mutableStateOf<Club?>(null) }
 
-    // Поля формы
     var name by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf(ClubCategory.OTHER) }
@@ -52,7 +51,6 @@ fun CreateEditClubScreen(
 
     var categoryExpanded by remember { mutableStateOf(false) }
 
-    // Загрузка данных при редактировании
     LaunchedEffect(clubId) {
         if (clubId != null) {
             val club = viewModel.getClubById(clubId)
@@ -115,7 +113,6 @@ fun CreateEditClubScreen(
                     .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Основная информация
                 SectionCard(title = "Основная информация") {
                     OutlinedTextField(
                         value = name,
@@ -140,7 +137,6 @@ fun CreateEditClubScreen(
 
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    // Выбор категории
                     ExposedDropdownMenuBox(
                         expanded = categoryExpanded,
                         onExpandedChange = { categoryExpanded = it }
@@ -173,7 +169,6 @@ fun CreateEditClubScreen(
                     }
                 }
 
-                // Адрес
                 SectionCard(title = "Местоположение") {
                     OutlinedTextField(
                         value = city,
@@ -207,7 +202,6 @@ fun CreateEditClubScreen(
                     )
                 }
 
-                // Возраст и цена
                 SectionCard(title = "Параметры") {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -248,7 +242,6 @@ fun CreateEditClubScreen(
                     )
                 }
 
-                // Расписание
                 SectionCard(title = "Расписание") {
                     OutlinedTextField(
                         value = schedule,
@@ -262,7 +255,6 @@ fun CreateEditClubScreen(
                     )
                 }
 
-                // Фото
                 SectionCard(title = "Фото (необязательно)") {
                     OutlinedTextField(
                         value = imageUrl,
@@ -276,7 +268,6 @@ fun CreateEditClubScreen(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // Кнопка сохранения
                 Button(
                     onClick = {
                         currentUser?.let { user ->
@@ -370,4 +361,3 @@ private fun textFieldColors() = OutlinedTextFieldDefaults.colors(
     focusedLabelColor = PrimaryColor,
     cursorColor = PrimaryColor
 )
-

@@ -35,12 +35,10 @@ fun ClubApplicationsScreen(
     val allClubs by viewModel.allClubs.collectAsState()
     val scope = rememberCoroutineScope()
 
-    // Создаём карту кружков
     val clubsMap = remember(allClubs) {
         allClubs.associateBy { it.id }
     }
 
-    // Группируем заявки по статусу
     val pendingApplications = applications.filter { it.status == ApplicationStatus.PENDING }
     val processedApplications = applications.filter { it.status != ApplicationStatus.PENDING }
 
@@ -239,7 +237,6 @@ private fun OrganizerApplicationCard(
                 }
             }
 
-            // Кнопки действий для ожидающих заявок
             if (onApprove != null && onReject != null) {
                 Spacer(modifier = Modifier.height(16.dp))
                 Row(
@@ -312,4 +309,3 @@ private fun formatDate(timestamp: Long): String {
     val sdf = SimpleDateFormat("dd.MM.yyyy в HH:mm", Locale.getDefault())
     return sdf.format(Date(timestamp))
 }
-

@@ -53,7 +53,6 @@ fun MyClubsScreen(
         )
 
         if (myClubs.isEmpty()) {
-            // Пустое состояние
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -164,7 +163,6 @@ private fun OrganizerClubCard(
         onClick = onClick
     ) {
         Column {
-            // Заголовок
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -226,7 +224,6 @@ private fun OrganizerClubCard(
                 }
             }
 
-            // Содержимое
             Column(
                 modifier = Modifier.padding(12.dp)
             ) {
@@ -244,7 +241,6 @@ private fun OrganizerClubCard(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    // Статистика
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
                             imageVector = Icons.Default.Star,
@@ -266,7 +262,6 @@ private fun OrganizerClubCard(
                         )
                     }
 
-                    // Цена
                     Text(
                         text = if (club.pricePerMonth > 0) "${club.pricePerMonth} ₽/мес" else "Бесплатно",
                         fontSize = 14.sp,
@@ -277,7 +272,6 @@ private fun OrganizerClubCard(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // Статус
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -300,7 +294,6 @@ private fun OrganizerClubCard(
         }
     }
 
-    // Диалог подтверждения удаления
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
@@ -325,4 +318,3 @@ private fun OrganizerClubCard(
         )
     }
 }
-

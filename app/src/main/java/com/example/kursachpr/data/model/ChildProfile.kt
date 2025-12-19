@@ -18,13 +18,11 @@ import androidx.room.PrimaryKey
 data class ChildProfile(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
-    val parentId: Long,              // ID родителя
-    val name: String,                // Имя ребёнка
-    val birthDate: Long,             // Дата рождения
-    val age: Int,                    // Возраст
-    val interests: String = "",      // Интересы (теги через запятую)
-    val healthInfo: String = "",     // Особенности здоровья
-    val additionalInfo: String = ""  // Дополнительная информация
+    val parentId: Long,
+    val name: String,
+    val birthDate: Long,
+    val age: Int,
+    val interests: String = "",
+    val healthInfo: String = "",
+    val additionalInfo: String = ""
 )
-
-

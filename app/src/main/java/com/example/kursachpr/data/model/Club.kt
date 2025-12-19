@@ -4,7 +4,6 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
-// Направления кружков
 enum class ClubCategory(val title: String) {
     SPORT("Спорт"),
     ART("Творчество"),
@@ -30,23 +29,21 @@ enum class ClubCategory(val title: String) {
 data class Club(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
-    val organizerId: Long,           // ID организатора
-    val name: String,                // Название кружка
-    val description: String,         // Описание
-    val category: ClubCategory,      // Направление
-    val city: String,                // Город
-    val district: String = "",       // Район
-    val address: String,             // Адрес
-    val ageFrom: Int,                // Возраст от
-    val ageTo: Int,                  // Возраст до
-    val pricePerMonth: Int,          // Стоимость в месяц
-    val schedule: String,            // Расписание занятий
-    val imageUrl: String = "",       // Фото (путь к изображению)
-    val isVerified: Boolean = false, // Верифицирован ли кружок
-    val isActive: Boolean = true,    // Активен ли кружок
-    val rating: Float = 0f,          // Рейтинг (1-5)
-    val reviewCount: Int = 0,        // Количество отзывов
+    val organizerId: Long,
+    val name: String,
+    val description: String,
+    val category: ClubCategory,
+    val city: String,
+    val district: String = "",
+    val address: String,
+    val ageFrom: Int,
+    val ageTo: Int,
+    val pricePerMonth: Int,
+    val schedule: String,
+    val imageUrl: String = "",
+    val isVerified: Boolean = false,
+    val isActive: Boolean = true,
+    val rating: Float = 0f,
+    val reviewCount: Int = 0,
     val createdAt: Long = System.currentTimeMillis()
 )
-
-

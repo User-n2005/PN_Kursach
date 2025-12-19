@@ -31,7 +31,6 @@ fun FavoritesScreen(
     val allClubs by viewModel.allClubs.collectAsState()
     val scope = rememberCoroutineScope()
 
-    // Получаем кружки из избранного
     val favoriteClubs = remember(favorites, allClubs) {
         val favoriteIds = favorites.map { it.clubId }.toSet()
         allClubs.filter { it.id in favoriteIds }
@@ -48,7 +47,6 @@ fun FavoritesScreen(
         )
 
         if (favoriteClubs.isEmpty()) {
-            // Пустое состояние
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -111,4 +109,3 @@ fun FavoritesScreen(
         }
     }
 }
-

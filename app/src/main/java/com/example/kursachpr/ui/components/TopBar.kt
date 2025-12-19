@@ -35,7 +35,6 @@ fun TopBar(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        // Меню
         IconButton(onClick = onMenuClick) {
             Icon(
                 imageVector = Icons.Default.Menu,
@@ -45,7 +44,6 @@ fun TopBar(
             )
         }
 
-        // Заголовок
         Text(
             text = title,
             fontSize = 20.sp,
@@ -53,7 +51,6 @@ fun TopBar(
             color = Color.White
         )
 
-        // Логотип
         Box(
             modifier = Modifier
                 .size(44.dp)
@@ -70,5 +67,3 @@ fun TopBar(
         }
     }
 }
-
-

@@ -37,7 +37,6 @@ fun SearchScreen(
     var showFilters by remember { mutableStateOf(false) }
     var searchQuery by remember { mutableStateOf("") }
     
-    // Фильтры
     var selectedCity by remember { mutableStateOf("") }
     var selectedAge by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf<ClubCategory?>(null) }
@@ -70,7 +69,6 @@ fun SearchScreen(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // Поле поиска и кнопка города
             item {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -119,7 +117,6 @@ fun SearchScreen(
                 }
             }
 
-            // Блок фильтров
             item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
@@ -139,7 +136,6 @@ fun SearchScreen(
                             color = TextPrimary
                         )
 
-                        // Возраст
                         FilterField(
                             label = "Возраст",
                             value = selectedAge,
@@ -147,7 +143,6 @@ fun SearchScreen(
                             placeholder = "Укажите возраст"
                         )
 
-                        // Направление
                         ExposedDropdownMenuBox(
                             expanded = categoryExpanded,
                             onExpandedChange = { categoryExpanded = !categoryExpanded }
@@ -190,7 +185,6 @@ fun SearchScreen(
                             }
                         }
 
-                        // Район
                         FilterField(
                             label = "Район",
                             value = selectedDistrict,
@@ -198,7 +192,6 @@ fun SearchScreen(
                             placeholder = "Укажите район"
                         )
 
-                        // Кнопка поиска
                         Button(
                             onClick = {
                                 val age = selectedAge.toIntOrNull()
@@ -227,7 +220,6 @@ fun SearchScreen(
                 }
             }
 
-            // Результаты поиска
             items(displayClubs) { club ->
                 ClubCard(
                     club = club,
@@ -275,5 +267,3 @@ private fun FilterField(
         )
     }
 }
-
-

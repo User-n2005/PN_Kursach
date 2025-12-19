@@ -24,13 +24,11 @@ import androidx.room.PrimaryKey
 data class Review(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
-    val clubId: Long,               // ID кружка
-    val userId: Long,               // ID пользователя (родитель или ребёнок)
-    val rating: Int,                // Рейтинг (1-5)
-    val text: String,               // Текст отзыва
-    val reply: String = "",         // Ответ организатора
-    val isApproved: Boolean = true, // Одобрен ли отзыв
+    val clubId: Long,
+    val userId: Long,
+    val rating: Int,
+    val text: String,
+    val reply: String = "",
+    val isApproved: Boolean = true,
     val createdAt: Long = System.currentTimeMillis()
 )
-
-

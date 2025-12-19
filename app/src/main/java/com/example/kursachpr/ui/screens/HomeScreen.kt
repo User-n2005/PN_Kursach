@@ -44,7 +44,6 @@ fun HomeScreen(
     val scope = rememberCoroutineScope()
     val favoriteStates = remember { mutableStateMapOf<Long, Boolean>() }
 
-    // Загружаем состояния избранного
     LaunchedEffect(allClubs) {
         allClubs.forEach { club ->
             favoriteStates[club.id] = viewModel.isFavorite(club.id)
@@ -56,7 +55,6 @@ fun HomeScreen(
             .fillMaxSize()
             .background(BackgroundColor)
     ) {
-        // Верхняя панель
         TopBar(
             title = "Главная",
             onMenuClick = onMenuClick
@@ -67,7 +65,6 @@ fun HomeScreen(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Топ-3 кружков
             item {
                 TopClubsSection(
                     topClubs = topClubs,
@@ -75,18 +72,16 @@ fun HomeScreen(
                 )
             }
 
-            // Поиск
             item {
                 SearchSection(
                     searchQuery = searchQuery,
                     onSearchChange = { searchQuery = it },
                     selectedCity = selectedCity,
-                    onCityClick = { /* Открыть выбор города */ },
+                    onCityClick = { },
                     onSearchClick = onSearchClick
                 )
             }
 
-            // Список всех кружков
             items(allClubs) { club ->
                 ClubCard(
                     club = club,
@@ -123,7 +118,6 @@ private fun TopClubsSection(
         Spacer(modifier = Modifier.height(16.dp))
 
         if (topClubs.isNotEmpty()) {
-            // Первое место
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
@@ -157,12 +151,10 @@ private fun TopClubsSection(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Второе и третье места
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                // Второе место
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
@@ -188,7 +180,6 @@ private fun TopClubsSection(
                     }
                 }
 
-                // Третье место
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
@@ -231,7 +222,6 @@ private fun SearchSection(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        // Поле поиска
         OutlinedTextField(
             value = searchQuery,
             onValueChange = onSearchChange,
@@ -256,7 +246,6 @@ private fun SearchSection(
             singleLine = true
         )
 
-        // Кнопка города
         Box(
             modifier = Modifier
                 .border(1.dp, Color.Black, RoundedCornerShape(20.dp))
@@ -273,5 +262,3 @@ private fun SearchSection(
         }
     }
 }
-
-

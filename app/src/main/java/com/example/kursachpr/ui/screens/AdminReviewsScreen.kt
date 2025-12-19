@@ -37,12 +37,10 @@ fun AdminReviewsScreen(
     var searchQuery by remember { mutableStateOf("") }
     var filterByRating by remember { mutableStateOf<Int?>(null) }
 
-    // Создаём карту кружков
     val clubsMap = remember(allClubs) {
         allClubs.associateBy { it.id }
     }
 
-    // Фильтрация отзывов
     val filteredReviews = remember(reviews, searchQuery, filterByRating) {
         reviews.filter { review ->
             val club = clubsMap[review.clubId]
@@ -53,7 +51,6 @@ fun AdminReviewsScreen(
         }.sortedByDescending { it.createdAt }
     }
 
-    // Статистика по рейтингу
     val ratingStats = remember(reviews) {
         reviews.groupingBy { it.rating }.eachCount()
     }
@@ -68,7 +65,6 @@ fun AdminReviewsScreen(
             onMenuClick = onMenuClick
         )
 
-        // Поиск
         OutlinedTextField(
             value = searchQuery,
             onValueChange = { searchQuery = it },
@@ -85,7 +81,6 @@ fun AdminReviewsScreen(
             )
         )
 
-        // Фильтры по рейтингу
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -126,7 +121,6 @@ fun AdminReviewsScreen(
             }
         }
 
-        // Статистика
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -252,7 +246,6 @@ private fun AdminReviewCard(
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
-            // Заголовок с рейтингом
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -286,7 +279,6 @@ private fun AdminReviewCard(
                     }
                 }
 
-                // Рейтинг
                 Surface(
                     color = getRatingColor(review.rating).copy(alpha = 0.15f),
                     shape = RoundedCornerShape(8.dp)
@@ -309,14 +301,12 @@ private fun AdminReviewCard(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Текст отзыва
             Text(
                 text = review.text,
                 fontSize = 14.sp,
                 color = TextPrimary
             )
 
-            // Ответ организатора
             if (review.reply.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(12.dp))
                 Surface(
@@ -344,7 +334,6 @@ private fun AdminReviewCard(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Дата и кнопка удаления
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -373,7 +362,6 @@ private fun AdminReviewCard(
         }
     }
 
-    // Диалог подтверждения удаления
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
@@ -413,4 +401,3 @@ private fun formatDate(timestamp: Long): String {
     val sdf = SimpleDateFormat("dd.MM.yyyy в HH:mm", Locale.getDefault())
     return sdf.format(Date(timestamp))
 }
-

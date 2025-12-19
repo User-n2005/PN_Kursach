@@ -4,7 +4,6 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
-// Статус заявки
 enum class ApplicationStatus(val title: String) {
     PENDING("Ожидание"),
     APPROVED("Подтверждена"),
@@ -32,12 +31,10 @@ enum class ApplicationStatus(val title: String) {
 data class Application(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
-    val clubId: Long,                        // ID кружка
-    val userId: Long,                        // ID пользователя
-    val childId: Long? = null,               // ID ребёнка (если заявка от родителя)
+    val clubId: Long,
+    val userId: Long,
+    val childId: Long? = null,
     val status: ApplicationStatus = ApplicationStatus.PENDING,
-    val message: String = "",                // Сообщение к заявке
+    val message: String = "",
     val createdAt: Long = System.currentTimeMillis()
 )
-
-

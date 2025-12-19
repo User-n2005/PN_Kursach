@@ -31,7 +31,6 @@ class MainActivity : ComponentActivity() {
                 val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
                 val scope = rememberCoroutineScope()
                 
-                // Инициализация базы данных при запуске
                 LaunchedEffect(Unit) {
                     val database = AppDatabase.getDatabase(context)
                     AppDatabase.ensurePopulated(database)
@@ -73,7 +72,6 @@ class MainActivity : ComponentActivity() {
                             navController = navController,
                             startDestination = Screen.Login
                         ) {
-                            // Экран входа
                             composable(Screen.Login) {
                                 LoginScreen(
                                     navController = navController,
@@ -81,7 +79,6 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
 
-                            // Экран регистрации
                             composable(Screen.Registration) {
                                 RegistrationScreen(
                                     navController = navController,
@@ -89,7 +86,6 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
 
-                            // Главная страница
                             composable(Screen.Home) {
                                 HomeScreen(
                                     viewModel = viewModel,
@@ -105,7 +101,6 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
 
-                            // Экран поиска
                             composable(Screen.Search) {
                                 SearchScreen(
                                     viewModel = viewModel,
@@ -118,7 +113,6 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
 
-                            // Детальная страница кружка
                             composable("${Screen.ClubDetail}/{clubId}") { backStackEntry ->
                                 val clubId = backStackEntry.arguments?.getString("clubId")?.toLongOrNull() ?: 0L
                                 ClubDetailScreen(
@@ -128,7 +122,6 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
 
-                            // Личный кабинет
                             composable(Screen.Profile) {
                                 ProfileScreen(
                                     viewModel = viewModel,
@@ -162,7 +155,6 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
 
-                            // Избранное
                             composable(Screen.Favorites) {
                                 FavoritesScreen(
                                     viewModel = viewModel,
@@ -175,7 +167,6 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
 
-                            // Мои заявки (для родителя/ребёнка)
                             composable(Screen.MyApplications) {
                                 MyApplicationsScreen(
                                     viewModel = viewModel,
@@ -188,7 +179,6 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
 
-                            // Дети (для родителя)
                             composable(Screen.Children) {
                                 ChildrenScreen(
                                     viewModel = viewModel,
@@ -198,7 +188,6 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
 
-                            // Мои кружки (для организатора)
                             composable(Screen.MyClubs) {
                                 MyClubsScreen(
                                     viewModel = viewModel,
@@ -217,7 +206,6 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
 
-                            // Заявки на кружки (для организатора)
                             composable(Screen.ClubApplications) {
                                 ClubApplicationsScreen(
                                     viewModel = viewModel,
@@ -227,7 +215,6 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
 
-                            // Создание кружка
                             composable(Screen.CreateClub) {
                                 CreateEditClubScreen(
                                     viewModel = viewModel,
@@ -239,7 +226,6 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
 
-                            // Редактирование кружка
                             composable("${Screen.EditClub}/{clubId}") { backStackEntry ->
                                 val clubId = backStackEntry.arguments?.getString("clubId")?.toLongOrNull()
                                 CreateEditClubScreen(
@@ -252,7 +238,6 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
 
-                            // Админ: Пользователи
                             composable(Screen.AdminUsers) {
                                 AdminUsersScreen(
                                     viewModel = viewModel,
@@ -262,7 +247,6 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
 
-                            // Админ: Кружки
                             composable(Screen.AdminClubs) {
                                 AdminClubsScreen(
                                     viewModel = viewModel,
@@ -278,7 +262,6 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
 
-                            // Админ: Отзывы
                             composable(Screen.AdminReviews) {
                                 AdminReviewsScreen(
                                     viewModel = viewModel,
@@ -295,7 +278,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-// Маршруты навигации
 object Screen {
     const val Registration = "registration"
     const val Login = "login"

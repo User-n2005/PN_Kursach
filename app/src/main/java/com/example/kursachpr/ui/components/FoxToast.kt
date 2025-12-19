@@ -13,7 +13,6 @@ object FoxToast {
     fun show(context: Context, message: String, duration: Int = Toast.LENGTH_SHORT) {
         val toast = Toast(context)
         
-        // Создаём layout программно
         val layout = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
             setPadding(32, 24, 32, 24)
@@ -21,7 +20,6 @@ object FoxToast {
             gravity = Gravity.CENTER_VERTICAL
         }
         
-        // Добавляем картинку лисы
         val imageView = ImageView(context).apply {
             setImageResource(R.drawable.fox_logo)
             val size = (48 * context.resources.displayMetrics.density).toInt()
@@ -30,7 +28,6 @@ object FoxToast {
             }
         }
         
-        // Добавляем текст
         val textView = TextView(context).apply {
             text = message
             setTextColor(context.getColor(android.R.color.white))
@@ -47,4 +44,3 @@ object FoxToast {
         toast.show()
     }
 }
-

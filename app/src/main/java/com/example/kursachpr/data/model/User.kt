@@ -3,12 +3,11 @@ package com.example.kursachpr.data.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-// Типы пользователей
 enum class UserType {
-    USER,       // Пользователь (взрослый)
-    CHILD,      // Ребёнок
-    ORGANIZER,  // Организатор кружка
-    ADMIN       // Администратор
+    USER,
+    CHILD,
+    ORGANIZER,
+    ADMIN
 }
 
 @Entity(tableName = "users")
@@ -22,5 +21,3 @@ data class User(
     val city: String = "",
     val registrationDate: Long = System.currentTimeMillis()
 )
-
-

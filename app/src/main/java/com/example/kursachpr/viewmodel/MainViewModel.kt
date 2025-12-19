@@ -22,29 +22,23 @@ class MainViewModel(application: AndroidApplication) : AndroidViewModel(applicat
         database.favoriteDao()
     )
 
-    // Текущий пользователь
     private val _currentUser = MutableStateFlow<User?>(null)
     val currentUser: StateFlow<User?> = _currentUser.asStateFlow()
 
-    // Топ-3 кружка
     val topClubs: StateFlow<List<Club>> = repository.getTopClubs()
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
-    // Все кружки
     val allClubs: StateFlow<List<Club>> = repository.getAllClubs()
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
-    // Результаты поиска
     private val _searchResults = MutableStateFlow<List<Club>>(emptyList())
     val searchResults: StateFlow<List<Club>> = _searchResults.asStateFlow()
 
-    // Фильтры поиска
     private val _searchCity = MutableStateFlow("")
     private val _searchCategory = MutableStateFlow<ClubCategory?>(null)
     private val _searchAge = MutableStateFlow<Int?>(null)
     private val _searchMaxPrice = MutableStateFlow<Int?>(null)
 
-    // === Авторизация ===
     suspend fun login(phone: String, password: String): User? {
         val user = repository.login(phone, password)
         if (user != null) {
@@ -65,7 +59,6 @@ class MainViewModel(application: AndroidApplication) : AndroidViewModel(applicat
         return repository.getUserByPhone(phone) != null
     }
 
-    // === Поиск кружков ===
     fun searchClubs(
         city: String = "",
         category: ClubCategory? = null,
@@ -89,7 +82,6 @@ class MainViewModel(application: AndroidApplication) : AndroidViewModel(applicat
         }
     }
 
-    // === Кружки ===
     suspend fun getClubById(id: Long): Club? = repository.getClubById(id)
 
     fun getClubsByOrganizer(organizerId: Long): Flow<List<Club>> = 
@@ -104,7 +96,6 @@ class MainViewModel(application: AndroidApplication) : AndroidViewModel(applicat
     suspend fun setClubVerified(id: Long, isVerified: Boolean) = 
         repository.setClubVerified(id, isVerified)
 
-    // === Избранное ===
     fun getFavorites(): Flow<List<Favorite>> {
         val userId = _currentUser.value?.id ?: return flowOf(emptyList())
         return repository.getFavoritesByUser(userId)
@@ -124,7 +115,6 @@ class MainViewModel(application: AndroidApplication) : AndroidViewModel(applicat
         }
     }
 
-    // === Заявки ===
     fun getMyApplications(): Flow<List<ClubApplication>> {
         val userId = _currentUser.value?.id ?: return flowOf(emptyList())
         return repository.getApplicationsByUser(userId)
@@ -148,7 +138,6 @@ class MainViewModel(application: AndroidApplication) : AndroidViewModel(applicat
     suspend fun updateApplicationStatus(id: Long, status: ApplicationStatus) =
         repository.updateApplicationStatus(id, status)
 
-    // === Отзывы ===
     fun getReviewsForClub(clubId: Long): Flow<List<Review>> =
         repository.getReviewsByClub(clubId)
 
@@ -170,7 +159,6 @@ class MainViewModel(application: AndroidApplication) : AndroidViewModel(applicat
 
     suspend fun replyToReview(id: Long, reply: String) = repository.addReplyToReview(id, reply)
 
-    // === Дети (анкеты) ===
     fun getChildren(): Flow<List<ChildProfile>> {
         val userId = _currentUser.value?.id ?: return flowOf(emptyList())
         return repository.getChildrenByParent(userId)
@@ -182,7 +170,6 @@ class MainViewModel(application: AndroidApplication) : AndroidViewModel(applicat
 
     suspend fun deleteChild(child: ChildProfile) = repository.deleteChild(child)
 
-    // === Профиль пользователя ===
     fun updateUser(user: User) {
         viewModelScope.launch {
             repository.updateUser(user)
@@ -190,12 +177,10 @@ class MainViewModel(application: AndroidApplication) : AndroidViewModel(applicat
         }
     }
 
-    // === Пользователи (для админа) ===
     fun getAllUsers(): Flow<List<User>> = repository.getAllUsers()
 
     suspend fun deleteUser(id: Long) = repository.deleteUser(id)
 
-    // === Получение данных для отображения ===
     suspend fun getUserById(id: Long): User? = repository.getUserById(id)
 
     fun getFavoriteClubs(): Flow<List<Club>> {
@@ -208,4 +193,3 @@ class MainViewModel(application: AndroidApplication) : AndroidViewModel(applicat
         return repository.getApplicationsForOrganizer(userId)
     }
 }
-

@@ -44,7 +44,6 @@ fun AdminClubsScreen(
     var showOnlyUnverified by remember { mutableStateOf(false) }
     var selectedCategory by remember { mutableStateOf<ClubCategory?>(null) }
 
-    // Фильтрация кружков
     val filteredClubs = remember(allClubs, searchQuery, showOnlyUnverified, selectedCategory) {
         allClubs.filter { club ->
             (searchQuery.isEmpty() || club.name.contains(searchQuery, ignoreCase = true)) &&
@@ -65,7 +64,6 @@ fun AdminClubsScreen(
             onMenuClick = onMenuClick
         )
 
-        // Поиск
         OutlinedTextField(
             value = searchQuery,
             onValueChange = { searchQuery = it },
@@ -82,7 +80,6 @@ fun AdminClubsScreen(
             )
         )
 
-        // Переключатель неверифицированных
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -106,7 +103,6 @@ fun AdminClubsScreen(
             )
         }
 
-        // Статистика
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -183,7 +179,6 @@ private fun AdminClubCard(
         onClick = onClick
     ) {
         Column {
-            // Заголовок с информацией о верификации
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -218,7 +213,6 @@ private fun AdminClubCard(
                         }
                     }
 
-                    // Кнопка верификации
                     IconButton(
                         onClick = onToggleVerification,
                         modifier = Modifier.size(36.dp)
@@ -235,11 +229,9 @@ private fun AdminClubCard(
                 }
             }
 
-            // Содержимое
             Column(
                 modifier = Modifier.padding(12.dp)
             ) {
-                // Категория
                 Surface(
                     color = SecondaryColor,
                     shape = RoundedCornerShape(4.dp)
@@ -264,7 +256,6 @@ private fun AdminClubCard(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // Организатор
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -284,7 +275,6 @@ private fun AdminClubCard(
 
                 Spacer(modifier = Modifier.height(4.dp))
 
-                // Адрес
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -306,7 +296,6 @@ private fun AdminClubCard(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // Рейтинг и цена
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -342,7 +331,6 @@ private fun AdminClubCard(
 
                 Divider(modifier = Modifier.padding(vertical = 12.dp))
 
-                // Кнопки редактирования и удаления
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
@@ -379,7 +367,6 @@ private fun AdminClubCard(
         }
     }
 
-    // Диалог подтверждения удаления
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
@@ -409,4 +396,3 @@ private fun AdminClubCard(
         )
     }
 }
-

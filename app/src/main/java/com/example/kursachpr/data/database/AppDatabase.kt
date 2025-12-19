@@ -55,14 +55,12 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
         
-        // Вызывается из Application или MainActivity для заполнения БД
         suspend fun ensurePopulated(database: AppDatabase) {
             if (isPopulated) return
             synchronized(this) {
                 if (isPopulated) return
                 isPopulated = true
             }
-            // Проверяем, есть ли пользователи
             val userCount = database.userDao().getUserCount()
             if (userCount == 0) {
                 populateDatabase(database)
@@ -73,7 +71,6 @@ abstract class AppDatabase : RoomDatabase() {
             val userDao = database.userDao()
             val clubDao = database.clubDao()
 
-            // Создаём аккаунт администратора
             val admin = User(
                 id = 1,
                 userType = UserType.ADMIN,
@@ -84,7 +81,6 @@ abstract class AppDatabase : RoomDatabase() {
             )
             userDao.insert(admin)
 
-            // Создаём тестового организатора
             val organizer = User(
                 id = 2,
                 userType = UserType.ORGANIZER,
@@ -95,7 +91,6 @@ abstract class AppDatabase : RoomDatabase() {
             )
             userDao.insert(organizer)
 
-            // Создаём тестового пользователя
             val user = User(
                 id = 3,
                 userType = UserType.USER,
@@ -106,7 +101,6 @@ abstract class AppDatabase : RoomDatabase() {
             )
             userDao.insert(user)
 
-            // Создаём тестового ребёнка
             val child = User(
                 id = 4,
                 userType = UserType.CHILD,
@@ -117,7 +111,6 @@ abstract class AppDatabase : RoomDatabase() {
             )
             userDao.insert(child)
 
-            // Создаём тестовые кружки (рейтинг 0 - будет рассчитан из отзывов)
             val clubs = listOf(
                 Club(
                     id = 1,
@@ -204,7 +197,6 @@ abstract class AppDatabase : RoomDatabase() {
                     rating = 0f,
                     reviewCount = 0
                 ),
-                // Кружки для взрослых (18+)
                 Club(
                     id = 6,
                     organizerId = 2,
@@ -260,20 +252,18 @@ abstract class AppDatabase : RoomDatabase() {
             
             clubs.forEach { clubDao.insert(it) }
 
-            // Добавляем тестовые отзывы
             val reviewDao = database.reviewDao()
             val reviews = listOf(
-                // Отзывы на "Лыжные гонки" (clubId = 1)
                 Review(
                     clubId = 1,
-                    userId = 3, // Родитель
+                    userId = 3,
                     rating = 5,
                     text = "Отличная секция! Сын занимается уже второй год, очень доволен. Тренеры внимательные и профессиональные.",
                     reply = "Спасибо за отзыв! Рады, что вашему сыну нравится!"
                 ),
                 Review(
                     clubId = 1,
-                    userId = 4, // Ребёнок
+                    userId = 4,
                     rating = 5,
                     text = "Мне очень нравится! Тренировки интересные, уже участвовал в соревнованиях."
                 ),
@@ -284,7 +274,6 @@ abstract class AppDatabase : RoomDatabase() {
                     text = "Хорошая организация, но хотелось бы больше занятий в неделю."
                 ),
                 
-                // Отзывы на "Рисование" (clubId = 2)
                 Review(
                     clubId = 2,
                     userId = 3,
@@ -299,7 +288,6 @@ abstract class AppDatabase : RoomDatabase() {
                     text = "Интересно учиться рисовать разными техниками."
                 ),
                 
-                // Отзывы на "Робототехника" (clubId = 3)
                 Review(
                     clubId = 3,
                     userId = 3,
@@ -319,7 +307,6 @@ abstract class AppDatabase : RoomDatabase() {
                     text = "Отличное оборудование, интересная программа. Немного дороговато, но оно того стоит."
                 ),
                 
-                // Отзывы на "Шахматы" (clubId = 4)
                 Review(
                     clubId = 4,
                     userId = 4,
@@ -333,7 +320,6 @@ abstract class AppDatabase : RoomDatabase() {
                     text = "Хороший преподаватель, терпеливый. Сын стал более усидчивым."
                 ),
                 
-                // Отзывы на "Современные танцы" (clubId = 5)
                 Review(
                     clubId = 5,
                     userId = 4,
@@ -353,7 +339,6 @@ abstract class AppDatabase : RoomDatabase() {
                     text = "Лучший танцевальный кружок! Атмосфера дружная, много концертов."
                 ),
                 
-                // Отзывы на "Вечер рисования" (clubId = 6) - только от взрослых
                 Review(
                     clubId = 6,
                     userId = 3,
@@ -368,7 +353,6 @@ abstract class AppDatabase : RoomDatabase() {
                     text = "Была уже 3 раза, каждый раз новые впечатления. Рекомендую всем!"
                 ),
                 
-                // Отзывы на "Йога для взрослых" (clubId = 7)
                 Review(
                     clubId = 7,
                     userId = 3,
@@ -385,7 +369,6 @@ abstract class AppDatabase : RoomDatabase() {
             
             reviews.forEach { reviewDao.insert(it) }
             
-            // Обновляем рейтинги кружков на основе отзывов
             for (clubId in 1L..8L) {
                 val avgRating = reviewDao.getAverageRating(clubId) ?: 0f
                 val reviewCount = reviewDao.getReviewCount(clubId)
@@ -394,5 +377,3 @@ abstract class AppDatabase : RoomDatabase() {
         }
     }
 }
-
-

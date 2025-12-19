@@ -47,7 +47,6 @@ fun ChildrenScreen(
         )
 
         if (children.isEmpty()) {
-            // Пустое состояние
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -124,7 +123,6 @@ fun ChildrenScreen(
         }
     }
 
-    // Диалог добавления ребёнка
     if (showAddDialog) {
         currentUser?.let { user ->
             AddEditChildDialog(
@@ -141,7 +139,6 @@ fun ChildrenScreen(
         }
     }
 
-    // Диалог редактирования ребёнка
     editingChild?.let { child ->
         currentUser?.let { user ->
             AddEditChildDialog(
@@ -261,7 +258,6 @@ private fun ChildCard(
         }
     }
 
-    // Диалог подтверждения удаления
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
@@ -382,4 +378,3 @@ private fun AddEditChildDialog(
         }
     )
 }
-

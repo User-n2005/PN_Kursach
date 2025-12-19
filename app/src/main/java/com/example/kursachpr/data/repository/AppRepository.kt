@@ -12,7 +12,6 @@ class AppRepository(
     private val applicationDao: ApplicationDao,
     private val favoriteDao: FavoriteDao
 ) {
-    // === Users ===
     fun getAllUsers(): Flow<List<User>> = userDao.getAllUsers()
     suspend fun getUserById(id: Long): User? = userDao.getUserById(id)
     suspend fun login(phone: String, password: String): User? = userDao.login(phone, password)
@@ -21,7 +20,6 @@ class AppRepository(
     suspend fun updateUser(user: User) = userDao.update(user)
     suspend fun deleteUser(id: Long) = userDao.deleteById(id)
 
-    // === Clubs ===
     fun getAllClubs(): Flow<List<Club>> = clubDao.getAllClubs()
     fun getTopClubs(): Flow<List<Club>> = clubDao.getTopClubs()
     suspend fun getClubById(id: Long): Club? = clubDao.getClubById(id)
@@ -39,14 +37,12 @@ class AppRepository(
     suspend fun deleteClub(id: Long) = clubDao.deleteById(id)
     suspend fun setClubVerified(id: Long, isVerified: Boolean) = clubDao.setVerified(id, isVerified)
 
-    // === Children ===
     fun getChildrenByParent(parentId: Long): Flow<List<ChildProfile>> = childDao.getChildrenByParent(parentId)
     suspend fun getChildById(id: Long): ChildProfile? = childDao.getChildById(id)
     suspend fun insertChild(child: ChildProfile): Long = childDao.insert(child)
     suspend fun updateChild(child: ChildProfile) = childDao.update(child)
     suspend fun deleteChild(child: ChildProfile) = childDao.delete(child)
 
-    // === Reviews ===
     fun getReviewsByClub(clubId: Long): Flow<List<Review>> = reviewDao.getReviewsByClub(clubId)
     fun getAllReviews(): Flow<List<Review>> = reviewDao.getAllReviews()
     suspend fun insertReview(review: Review): Long {
@@ -69,22 +65,17 @@ class AppRepository(
         clubDao.updateRating(clubId, avgRating, reviewCount)
     }
 
-    // === Applications ===
     fun getApplicationsByUser(userId: Long): Flow<List<Application>> = applicationDao.getApplicationsByUser(userId)
     fun getApplicationsByClub(clubId: Long): Flow<List<Application>> = applicationDao.getApplicationsByClub(clubId)
     suspend fun insertApplication(application: Application): Long = applicationDao.insert(application)
     suspend fun updateApplicationStatus(id: Long, status: ApplicationStatus) = applicationDao.updateStatus(id, status)
 
-    // === Favorites ===
     fun getFavoritesByUser(userId: Long): Flow<List<Favorite>> = favoriteDao.getFavoritesByUser(userId)
     fun getFavoriteClubs(userId: Long): Flow<List<Club>> = favoriteDao.getFavoriteClubs(userId)
     suspend fun isFavorite(userId: Long, clubId: Long): Boolean = favoriteDao.isFavorite(userId, clubId)
     suspend fun addFavorite(favorite: Favorite): Long = favoriteDao.insert(favorite)
     suspend fun removeFavorite(userId: Long, clubId: Long) = favoriteDao.delete(userId, clubId)
 
-    // === Applications for Organizer ===
     fun getApplicationsForOrganizer(organizerId: Long): Flow<List<Application>> = 
         applicationDao.getApplicationsForOrganizer(organizerId)
 }
-
-

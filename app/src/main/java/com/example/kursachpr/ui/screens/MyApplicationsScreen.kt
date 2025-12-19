@@ -38,7 +38,6 @@ fun MyApplicationsScreen(
     val applications by viewModel.getMyApplications().collectAsState(initial = emptyList())
     val allClubs by viewModel.allClubs.collectAsState()
 
-    // Создаём карту кружков для быстрого доступа
     val clubsMap = remember(allClubs) {
         allClubs.associateBy { it.id }
     }
@@ -54,7 +53,6 @@ fun MyApplicationsScreen(
         )
 
         if (applications.isEmpty()) {
-            // Пустое состояние
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -244,4 +242,3 @@ private fun formatDate(timestamp: Long): String {
     val sdf = SimpleDateFormat("dd.MM.yyyy в HH:mm", Locale.getDefault())
     return sdf.format(Date(timestamp))
 }
-

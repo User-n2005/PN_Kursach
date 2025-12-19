@@ -35,7 +35,6 @@ import com.example.kursachpr.ui.theme.*
 import com.example.kursachpr.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
 
-// Роли пользователей для регистрации (без администратора)
 enum class RegistrationRole(val title: String, val userType: UserType) {
     USER("Пользователь", UserType.USER),
     CHILD("Ребёнок", UserType.CHILD),
@@ -70,7 +69,6 @@ fun RegistrationScreen(
     ) {
         Spacer(modifier = Modifier.height(48.dp))
 
-        // Логотип
         Box(
             modifier = Modifier
                 .size(140.dp)
@@ -104,7 +102,6 @@ fun RegistrationScreen(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Поле ФИО
         OutlinedTextField(
             value = fullName,
             onValueChange = { fullName = it },
@@ -125,7 +122,6 @@ fun RegistrationScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Поле телефона
         OutlinedTextField(
             value = phone,
             onValueChange = { phone = it },
@@ -148,7 +144,6 @@ fun RegistrationScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Поле города
         OutlinedTextField(
             value = city,
             onValueChange = { city = it },
@@ -170,7 +165,6 @@ fun RegistrationScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Поле пароля
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
@@ -205,7 +199,6 @@ fun RegistrationScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Выпадающее меню для выбора роли
         ExposedDropdownMenuBox(
             expanded = expanded,
             onExpandedChange = { expanded = !expanded },
@@ -257,7 +250,6 @@ fun RegistrationScreen(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Кнопка регистрации
         Button(
             onClick = {
                 when {
@@ -273,7 +265,6 @@ fun RegistrationScreen(
                     else -> {
                         isLoading = true
                         scope.launch {
-                            // Проверяем, не занят ли телефон
                             if (viewModel.isPhoneExists(phone)) {
                                 FoxToast.show(context, "Этот номер уже зарегистрирован")
                                 isLoading = false
@@ -325,7 +316,6 @@ fun RegistrationScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Ссылка на вход
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,

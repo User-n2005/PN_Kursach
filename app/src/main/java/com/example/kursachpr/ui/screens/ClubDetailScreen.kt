@@ -47,7 +47,6 @@ fun ClubDetailScreen(
     var showApplicationDialog by remember { mutableStateOf(false) }
     var showReviewDialog by remember { mutableStateOf(false) }
 
-    // Загрузка данных
     LaunchedEffect(clubId) {
         club = viewModel.getClubById(clubId)
         club?.let {
@@ -119,29 +118,24 @@ fun ClubDetailScreen(
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Заголовок с фото
                 item {
                     ClubHeader(club = club!!, organizerName = organizerName)
                 }
 
-                // Информация
                 item {
                     ClubInfoCard(club = club!!)
                 }
 
-                // Расписание
                 item {
                     ScheduleCard(schedule = club!!.schedule)
                 }
 
-                // Кнопки действий для пользователя/ребёнка
                 if (currentUser?.userType in listOf(UserType.USER, UserType.CHILD)) {
                     val isChildUser = currentUser?.userType == UserType.CHILD
                     val isAdultOnlyClub = club?.ageFrom ?: 0 >= 16
                     
                     item {
                         val context = LocalContext.current
-                        // Предупреждение для детей о взрослых кружках
                         if (isChildUser && isAdultOnlyClub) {
                             Card(
                                 modifier = Modifier.fillMaxWidth(),
@@ -211,7 +205,6 @@ fun ClubDetailScreen(
                     }
                 }
 
-                // Отзывы
                 item {
                     Text(
                         text = "Отзывы (${reviews.size})",
@@ -261,7 +254,6 @@ fun ClubDetailScreen(
         }
     }
 
-    // Диалог заявки
     if (showApplicationDialog) {
         ApplicationDialog(
             onDismiss = { showApplicationDialog = false },
@@ -274,7 +266,6 @@ fun ClubDetailScreen(
         )
     }
 
-    // Диалог отзыва
     if (showReviewDialog) {
         ReviewDialog(
             onDismiss = { showReviewDialog = false },
@@ -534,7 +525,6 @@ private fun ReviewCard(
                         )
                     }
                     
-                    // Кнопка удаления для админа
                     if (isAdmin) {
                         Spacer(modifier = Modifier.width(8.dp))
                         IconButton(
@@ -568,7 +558,6 @@ private fun ReviewCard(
                 color = TextSecondary.copy(alpha = 0.6f)
             )
 
-            // Ответ организатора
             if (review.reply.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(12.dp))
                 Surface(
@@ -594,7 +583,6 @@ private fun ReviewCard(
                 }
             }
 
-            // Кнопка ответа для организатора (только если нет ответа)
             if (isOrganizer && review.reply.isEmpty()) {
                 Spacer(modifier = Modifier.height(8.dp))
                 TextButton(
@@ -613,7 +601,6 @@ private fun ReviewCard(
         }
     }
 
-    // Диалог ответа
     if (showReplyDialog) {
         ReplyDialog(
             onDismiss = { showReplyDialog = false },
@@ -626,7 +613,6 @@ private fun ReviewCard(
         )
     }
 
-    // Диалог удаления для админа
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
@@ -794,4 +780,3 @@ private fun formatDate(timestamp: Long): String {
     val sdf = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
     return sdf.format(Date(timestamp))
 }
-

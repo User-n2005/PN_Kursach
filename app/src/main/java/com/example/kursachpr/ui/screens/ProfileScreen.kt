@@ -63,17 +63,14 @@ fun ProfileScreen(
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Аватар и имя
                 ProfileHeader(user = user)
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Информация о пользователе
                 ProfileInfoCard(user = user)
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Быстрые действия в зависимости от типа пользователя
                 when (user.userType) {
                     UserType.USER -> ParentQuickActions(
                         onChildrenClick = onNavigateToChildren,
@@ -97,7 +94,6 @@ fun ProfileScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Кнопка редактирования профиля
                 OutlinedButton(
                     onClick = { showEditDialog = true },
                     modifier = Modifier.fillMaxWidth(),
@@ -128,7 +124,6 @@ fun ProfileScreen(
         }
     }
 
-    // Диалог редактирования профиля
     if (showEditDialog) {
         currentUser?.let { user ->
             EditProfileDialog(
@@ -148,7 +143,6 @@ private fun ProfileHeader(user: User) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Аватар
         Box(
             modifier = Modifier
                 .size(100.dp)
@@ -175,7 +169,6 @@ private fun ProfileHeader(user: User) {
 
         Spacer(modifier = Modifier.height(4.dp))
 
-        // Тип пользователя
         Surface(
             color = SecondaryColor,
             shape = RoundedCornerShape(16.dp)
@@ -544,4 +537,3 @@ private fun formatDate(timestamp: Long): String {
     val sdf = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
     return sdf.format(Date(timestamp))
 }
-

@@ -80,7 +80,6 @@ fun DrawerMenu(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        // Кнопка выхода
         Text(
             text = "Выйти",
             fontSize = 18.sp,
@@ -94,5 +93,3 @@ fun DrawerMenu(
         )
     }
 }
-
-
