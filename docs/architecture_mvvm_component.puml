@@ -1,0 +1,105 @@
+@startuml
+title Архитектура приложения (MVVM) — UML Component Diagram
+
+!pragma layout smetana
+
+skinparam componentStyle rectangle
+skinparam shadowing true
+skinparam packageStyle rectangle
+
+' =======================
+' Presentation Layer
+' =======================
+package "Presentation Layer\n(Уровень представления)" as PL {
+  package "UI Screens\n(Jetpack Compose)" as UIS {
+    [MainActivity] <<UI>>
+    [LoginScreen] <<UI>>
+    [RegistrationScreen] <<UI>>
+    [HomeScreen] <<UI>>
+    [SearchScreen] <<UI>>
+    [ClubDetailScreen] <<UI>>
+    [ProfileScreen] <<UI>>
+    [FavoritesScreen] <<UI>>
+    [MyApplicationsScreen] <<UI>>
+    [MyClubsScreen] <<UI>>
+    [ClubApplicationsScreen] <<UI>>
+    [CreateEditClubScreen] <<UI>>
+    [ChildrenScreen] <<UI>>
+    [AdminUsersScreen] <<UI>>
+    [AdminClubsScreen] <<UI>>
+    [AdminReviewsScreen] <<UI>>
+  }
+
+  package "UI Components" as UIC {
+    [TopBar] <<UI>>
+    [DrawerMenu] <<UI>>
+    [ClubCard] <<UI>>
+    [FoxToast] <<UI>>
+  }
+}
+
+' =======================
+' ViewModel Layer
+' =======================
+package "ViewModel Layer\n(Уровень бизнес-логики)" as VL {
+  [MainViewModel] <<ViewModel>>
+}
+
+' =======================
+' Data Layer
+' =======================
+package "Data Layer\n(Уровень данных)" as DL {
+  [AppRepository] <<Repository>>
+  [DAO Interfaces\n(UserDao, ClubDao,\nChildDao, ReviewDao,\nApplicationDao, FavoriteDao)] <<DAO>>
+
+  database "AppDatabase\n(Room / SQLite)" as DB
+
+  [AppRepository] ..> [DAO Interfaces\n(UserDao, ClubDao,\nChildDao, ReviewDao,\nApplicationDao, FavoriteDao)]
+  DB ..> [DAO Interfaces\n(UserDao, ClubDao,\nChildDao, ReviewDao,\nApplicationDao, FavoriteDao)]
+}
+
+' =======================
+' Model Layer (Entities)
+' =======================
+package "Model Layer\n(Entities / модели)" as ML {
+  ' В компонентной диаграмме показываем сущности как "компоненты/артефакты данных"
+  [User] <<Entity>>
+  [Club] <<Entity>>
+  [Review] <<Entity>>
+  [Application] <<Entity>>
+  [ChildProfile] <<Entity>>
+  [Favorite] <<Entity>>
+}
+
+' =======================
+' DI
+' =======================
+package "DI (Koin / Hilt)\nУправление зависимостями" as DI {
+  [DI Container] <<framework>>
+  [DatabaseModule] <<module>>
+  [RepositoryModule] <<module>>
+  [ViewModelModule] <<module>>
+
+  [DI Container] ..> [DatabaseModule] : registers
+  [DI Container] ..> [RepositoryModule] : registers
+  [DI Container] ..> [ViewModelModule] : registers
+}
+
+' =======================
+' Dependencies between layers
+' =======================
+UIS ..> MainViewModel : StateFlow / Events
+UIC ..> MainViewModel : StateFlow / Events
+
+MainViewModel ..> AppRepository : Coroutines / Flow
+' Репозиторий работает с Room через DAO, а не напрямую с DB (в проекте AppRepository получает DAO через DI)
+
+DB ..> ML : stores entities
+
+' DI wiring (dashed = configuration time)
+DI ..> VL : inject ViewModel
+DI ..> DL : inject Repository/DAO/Database
+
+@enduml
+
+

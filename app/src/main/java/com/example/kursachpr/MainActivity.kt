@@ -7,17 +7,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.kursachpr.data.database.AppDatabase
 import com.example.kursachpr.ui.components.DrawerMenu
 import com.example.kursachpr.ui.screens.*
 import com.example.kursachpr.ui.theme.KursachTheme
 import com.example.kursachpr.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,16 +23,11 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             KursachTheme {
-                val context = LocalContext.current
-                val viewModel: MainViewModel = viewModel()
+                // ViewModel инъецируется через Koin DI
+                val viewModel: MainViewModel = koinViewModel()
                 val navController = rememberNavController()
                 val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
                 val scope = rememberCoroutineScope()
-                
-                LaunchedEffect(Unit) {
-                    val database = AppDatabase.getDatabase(context)
-                    AppDatabase.ensurePopulated(database)
-                }
                 
                 val currentUser by viewModel.currentUser.collectAsState()
 

@@ -1,26 +1,16 @@
 package com.example.kursachpr.viewmodel
 
-import android.app.Application as AndroidApplication
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.kursachpr.data.database.AppDatabase
 import com.example.kursachpr.data.model.*
 import com.example.kursachpr.data.model.Application as ClubApplication
 import com.example.kursachpr.data.repository.AppRepository
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-class MainViewModel(application: AndroidApplication) : AndroidViewModel(application) {
-    
-    private val database = AppDatabase.getDatabase(application)
-    private val repository = AppRepository(
-        database.userDao(),
-        database.clubDao(),
-        database.childDao(),
-        database.reviewDao(),
-        database.applicationDao(),
-        database.favoriteDao()
-    )
+class MainViewModel(
+    private val repository: AppRepository
+) : ViewModel() {
 
     private val _currentUser = MutableStateFlow<User?>(null)
     val currentUser: StateFlow<User?> = _currentUser.asStateFlow()

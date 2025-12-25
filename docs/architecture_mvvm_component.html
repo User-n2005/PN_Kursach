@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UML-диаграмма компонентов (MVVM)</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+    .container { max-width: 1100px; margin: 0 auto; }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 24px;
+      font-size: 2.1em;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.08);
+    }
+    .section {
+      background: white;
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    }
+    .section h2 {
+      color: #7A518D;
+      margin-bottom: 18px;
+      font-size: 1.4em;
+      border-bottom: 3px solid #C0B2D6;
+      padding-bottom: 12px;
+    }
+    .diagram {
+      display: flex;
+      justify-content: center;
+      padding: 18px;
+      background: #fafbfc;
+      border-radius: 15px;
+      overflow-x: auto;
+    }
+    object, img {
+      max-width: 100%;
+      height: auto;
+    }
+    .note {
+      margin-top: 16px;
+      padding: 14px;
+      background: #f8f4fb;
+      border-left: 4px solid #7A518D;
+      border-radius: 0 10px 10px 0;
+      color: #555;
+      font-size: 0.95em;
+      line-height: 1.35;
+    }
+    .btn {
+      display: block;
+      margin: 18px auto 0;
+      padding: 12px 28px;
+      background: linear-gradient(135deg, #7A518D 0%, #5D4A66 100%);
+      color: #fff;
+      border: none;
+      border-radius: 30px;
+      font-size: 1.0em;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(122, 81, 141, 0.35);
+    }
+    code { background: rgba(0,0,0,0.04); padding: 2px 6px; border-radius: 6px; }
+    @media print {
+      body { background: white; padding: 0; }
+      .section { box-shadow: none; }
+      .btn { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>UML-диаграмма компонентов архитектуры (MVVM)</h1>
+
+    <div class="section">
+      <h2>Схема: Архитектура приложения (MVVM + DI)</h2>
+
+      <div class="diagram">
+        <!-- Файл SVG генерируется из PlantUML: docs/architecture_mvvm_component.puml -->
+        <object data="architecture_mvvm_component.svg" type="image/svg+xml">
+          <img src="architecture_mvvm_component.svg" alt="UML Component Diagram (MVVM)" />
+        </object>
+      </div>
+
+      <div class="note">
+        <strong>Откуда берётся SVG:</strong> диаграмма рендерится из файла <code>docs/architecture_mvvm_component.puml</code>
+        (PlantUML). Если SVG ещё не создан — сначала сгенерируйте его, затем откройте этот HTML.
+      </div>
+
+      <button class="btn" onclick="window.print()">Сохранить как PDF / Печать</button>
+    </div>
+  </div>
+</body>
+</html>
+
+
+
